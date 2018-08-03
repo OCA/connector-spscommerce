@@ -1,6 +1,6 @@
-[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/270/11.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-connector-spscommerce-270)
-[![Build Status](https://travis-ci.com/OCA/connector-spscommerce.svg?branch=11.0)](https://travis-ci.com/OCA/connector-spscommerce)
-[![codecov](https://codecov.io/gh/OCA/connector-spscommerce/branch/11.0/graph/badge.svg)](https://codecov.io/gh/OCA/connector-spscommerce)
+[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/270/9.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-connector-spscommerce-270)
+[![Build Status](https://travis-ci.com/OCA/connector-spscommerce.svg?branch=9.0)](https://travis-ci.com/OCA/connector-spscommerce)
+[![codecov](https://codecov.io/gh/OCA/connector-spscommerce/branch/9.0/graph/badge.svg)](https://codecov.io/gh/OCA/connector-spscommerce)
 
 # Connector SPS Commerce
 
