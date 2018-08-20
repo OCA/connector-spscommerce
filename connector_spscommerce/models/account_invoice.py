@@ -76,7 +76,7 @@ class account_invoice(osv.osv):
         'ship_not_before_date': fields.date('Estimated Shipping Date', help="This is the date from the 856."),
         'cancel_after_date': fields.date('Cancel if Shipped After This Date', help="Cancel if Shipped After This Date."),
         'sale_id': fields.many2one('sale.order', 'Sale Order', help='Sale Order from Whence this Invoice Was created'),
-        'picking_id': fields.many2one('stock.picking','Picking ID', help='Stock Picking ID whence this invoice was created'),
+        'picking_id': fields.many2one('stock.picking', 'Picking ID', help='Stock Picking ID whence this invoice was created'),
         'scac_code': fields.char('SCAC Code', help="This is the shipping alpha code from your carrier."),
         'bol_num': fields.char('BoL Number', help="This is bill of lading number from your carrier/shipper."),
         'tracking_num': fields.char('Supplier Code', help="This is the tracking number from your carrier."),
@@ -132,29 +132,29 @@ class account_invoice(osv.osv):
         invoices_list = {'Invoices':[]}
         for invoice in self.browse(cr, uid, invoice_ids, context=context):
             num += invoice.number
-            #skip non customer invoice records
-            if invoice.type not in ('out_invoice') or invoice.state in ('draft','cancel','paid'):
+            # skip non customer invoice records
+            if invoice.type not in ('out_invoice') or invoice.state in ('draft', 'cancel', 'paid'):
                 continue
             
-            #Grab the vendor_id and trading_partner_id for EDI in the edi_config.
+            # Grab the vendor_id and trading_partner_id for EDI in the edi_config.
             trading_partner_code = invoice.trading_partner_id.partner_header_string
             vendor_code = invoice.trading_partner_id.vendor_header_string
             
             date_format = "%Y-%m-%d"
-            #invoice date
+            # invoice date
             inv_date = invoice.date_invoice
             dateinv_object = datetime.strptime(inv_date, date_format)
             inv_date = dateinv_object.date()
             inv_date = str(inv_date)
             
-            #purchase date
+            # purchase date
             po_date = invoice.purchase_id and invoice.purchase_id.date_order or ''
             if po_date:
                 datepo_object = datetime.strptime(po_date, date_format)
                 po_date = datepo_object.date()
                 po_date = str(po_date)
             
-            #ship date
+            # ship date
             ship_date = invoice.picking_id and invoice.picking_id.date_done or ''
             if ship_date:
                 ship_object = datetime.strptime(ship_date, date_format)
@@ -271,12 +271,12 @@ class account_invoice(osv.osv):
             }
             invoice_dict.get('Invoice').update(meta_dict)
             invoice_dict.get('Invoice').update(header_dict)
-            #LineItems
+            # LineItems
             lineitems_list = {'LineItems': []}
             total_lines = 0
             total_qty = 0
             total_weight = 0
-            #for each item line
+            # for each item line
             for line in invoice.invoice_line_ids:
                 total_lines += 1
                 total_qty += line.quantity
@@ -306,7 +306,7 @@ class account_invoice(osv.osv):
                     'ProductMaterialDescription':line.product_material_description or '',
                     'NRFStandardColorAndSize':{
                         'NRFColorCode':'600',
-                        'NRFSizeCode':'42-10651',                    
+                        'NRFSizeCode':'42-10651',
                     }
                 },
                     'ProductOrItemDescription':{
@@ -366,8 +366,8 @@ class account_invoice(osv.osv):
             processed += 1
         # Convert dictionary to xml
         xml = dicttoxml.dicttoxml(invoices_list, attr_type=False, root=False)
-        xml = xml.replace('<item>','').replace('</item>','')
-        xml = xml.replace('<item>','').replace('<Invoices>','<?xml version="1.0" encoding="utf-8"?><Invoices xmlns="http://www.spscommerce.com/RSX">')
+        xml = xml.replace('<item>', '').replace('</item>', '')
+        xml = xml.replace('<item>', '').replace('<Invoices>', '<?xml version="1.0" encoding="utf-8"?><Invoices xmlns="http://www.spscommerce.com/RSX">')
         # Write ASN doc to text file
         num = re.findall('\d+', num)[0]
         filename = '810_' + today + '%s.xml' % num
@@ -378,8 +378,8 @@ class account_invoice(osv.osv):
         return processed
     
     def _create_810_wrapper(self, cr, uid, context=None):
-        #search for invoices that are edi_yes = True and 810_sent_timestamp = False.
-        eligible_invoices = self.search(cr, uid, [('edi_yes','=',True),('810_sent_timestamp','=',False)], context=context)       
+        # search for invoices that are edi_yes = True and 810_sent_timestamp = False.
+        eligible_invoices = self.search(cr, uid, [('edi_yes', '=', True), ('810_sent_timestamp', '=', False)], context=context)       
         return eligible_invoices and self.create_text_810(cr, uid, eligible_invoices, context=context) or False
 
     # done as a server action        

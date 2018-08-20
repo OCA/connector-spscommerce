@@ -76,8 +76,8 @@ class SaleOrder(models.Model):
         for sale_id in sale_ids:
         
             # initialize
-            csvwriter=None
-            sale_obj = self.browse(cr,uid, sale_id, context=context)
+            csvwriter = None
+            sale_obj = self.browse(cr, uid, sale_id, context=context)
             config_obj = sale_obj.trading_partner_id
             OUT_PATH = config_obj.out_path
             sale_lines = sale_obj.order_line          
@@ -88,19 +88,19 @@ class SaleOrder(models.Model):
             if sale_obj.client_order_ref:
                 po_num = sale_obj.client_order_ref
             
-            #create and format dates for ACK
+            # create and format dates for ACK
             now = datetime.now()
             today = now.strftime('%Y%m%d')
             time = datetime.now().strftime('%H%M%S')
-            po_date = datetime.strptime(sale_obj.date_order,'%Y-%m-%d %H:%M:%S') 
+            po_date = datetime.strptime(sale_obj.date_order, '%Y-%m-%d %H:%M:%S') 
             po_date = po_date.strftime('%m/%d/%Y')
             
-            #generate random numbers for the 3 header id numbers in 855
-            ISA_num = randint(100000000,999999999)
-            GS_code = randint(1000000,9999999)
-            st_trans_num = randint(100000000,999999999)
+            # generate random numbers for the 3 header id numbers in 855
+            ISA_num = randint(100000000, 999999999)
+            GS_code = randint(1000000, 9999999)
+            st_trans_num = randint(100000000, 999999999)
 
-            #Grab the vendor_id and trading_partner_id for EDI in the edi_config.
+            # Grab the vendor_id and trading_partner_id for EDI in the edi_config.
             trading_partner_code = sale_obj.trading_partner_id.partner_header_string
             trading_partner_padded = trading_partner_code.ljust(15)
 
@@ -108,98 +108,98 @@ class SaleOrder(models.Model):
             vendor_padded = vendor_code.ljust(15)
             OUT_PATH = str(sale_obj.trading_partner_id.out_path)
             
-            #header, payment  and date info
-            xml_output += '<OrderHeader><TradingPartnerId>' +trading_partner_code+ '</TradingPartnerId>'
-            xml_output += '<PurchaseOrderNumber>' +po_num+ '</PurchaseOrderNumber>'
-            xml_output += '<TsetPurposeCode>'+str(sale_obj.tset_purpose_code)+'</TsetPurposeCode>'
-            xml_output += '<PurchaseOrderDate>' +po_date+ '</PurchaseOrderDate>'
-            xml_output += '<PurchaseOrderTypeCode>' +str(sale_obj.purchase_order_type_code)+ '</PurchaseOrderTypeCode>'
-            xml_output += '<POTypeDescription>' +str(sale_obj.po_type_description)+ '</POTypeDescription>'
-            xml_output += '<ReleaseNumber>' +po_num+ '</ReleaseNumber>'
+            # header, payment  and date info
+            xml_output += '<OrderHeader><TradingPartnerId>' + trading_partner_code + '</TradingPartnerId>'
+            xml_output += '<PurchaseOrderNumber>' + po_num + '</PurchaseOrderNumber>'
+            xml_output += '<TsetPurposeCode>' + str(sale_obj.tset_purpose_code) + '</TsetPurposeCode>'
+            xml_output += '<PurchaseOrderDate>' + po_date + '</PurchaseOrderDate>'
+            xml_output += '<PurchaseOrderTypeCode>' + str(sale_obj.purchase_order_type_code) + '</PurchaseOrderTypeCode>'
+            xml_output += '<POTypeDescription>' + str(sale_obj.po_type_description) + '</POTypeDescription>'
+            xml_output += '<ReleaseNumber>' + po_num + '</ReleaseNumber>'
             xml_output += '<AcknowledgementType>RJ</AcknowledgementType>'
-            xml_output += '<AcknowledgementDate>' +today+ '</AcknowledgementDate>'
-            xml_output += '<ShipCompleteCode>' +str(sale_obj.ship_complete_code)+ '</ShipCompleteCode>'
-            xml_output += '<BuyersCurrency>'+str(sale_obj.pricelist_id.currency_id.name)+'</BuyersCurrency>'
-            xml_output += '<Department>' +str(sale_obj.department)+ '</Department>'
-            xml_output += '<Division>' +str(sale_obj.division)+ '</Division>'
-            xml_output += '<CustomerOrderNumber>' +str(sale_obj.name)+ '</CustomerOrderNumber>'
-            xml_output += '<PromotionDealNumber>' +str(sale_obj.promotion_deal_number)+ '</PromotionDealNumber>'
-            xml_output += '<Vendor>' +vendor_code+ '</Vendor></OrderHeader>'
-            xml_output += '<PaymentTerms><TermsType>'+str(sale_obj.terms_type)+'</TermsType>'
-            xml_output += '<TermsBasisDateCode>' +str(sale_obj.terms_basis_date_code)+ '</TermsBasisDateCode>'
-            xml_output += '<TermsDiscountPercentage>' +str(sale_obj.terms_discount_percentage)+ '</TermsDiscountPercentage>'
-            xml_output += '<TermsDiscountDueDays>' +str(sale_obj.terms_discount_due_days)+ '</TermsDiscountDueDays>'
-            xml_output += '<TermsNetDueDays>' +str(sale_obj.terms_net_due_days)+ '</TermsNetDueDays>'
-            xml_output += '<TermsDescription>' +str(sale_obj.payment_term_id.note)+ '</TermsDescription>'
-            xml_output += '<PaymentMethodCode>' +str(sale_obj.payment_method_code)+ '</PaymentMethodCode></PaymentTerms>'
+            xml_output += '<AcknowledgementDate>' + today + '</AcknowledgementDate>'
+            xml_output += '<ShipCompleteCode>' + str(sale_obj.ship_complete_code) + '</ShipCompleteCode>'
+            xml_output += '<BuyersCurrency>' + str(sale_obj.pricelist_id.currency_id.name) + '</BuyersCurrency>'
+            xml_output += '<Department>' + str(sale_obj.department) + '</Department>'
+            xml_output += '<Division>' + str(sale_obj.division) + '</Division>'
+            xml_output += '<CustomerOrderNumber>' + str(sale_obj.name) + '</CustomerOrderNumber>'
+            xml_output += '<PromotionDealNumber>' + str(sale_obj.promotion_deal_number) + '</PromotionDealNumber>'
+            xml_output += '<Vendor>' + vendor_code + '</Vendor></OrderHeader>'
+            xml_output += '<PaymentTerms><TermsType>' + str(sale_obj.terms_type) + '</TermsType>'
+            xml_output += '<TermsBasisDateCode>' + str(sale_obj.terms_basis_date_code) + '</TermsBasisDateCode>'
+            xml_output += '<TermsDiscountPercentage>' + str(sale_obj.terms_discount_percentage) + '</TermsDiscountPercentage>'
+            xml_output += '<TermsDiscountDueDays>' + str(sale_obj.terms_discount_due_days) + '</TermsDiscountDueDays>'
+            xml_output += '<TermsNetDueDays>' + str(sale_obj.terms_net_due_days) + '</TermsNetDueDays>'
+            xml_output += '<TermsDescription>' + str(sale_obj.payment_term_id.note) + '</TermsDescription>'
+            xml_output += '<PaymentMethodCode>' + str(sale_obj.payment_method_code) + '</PaymentMethodCode></PaymentTerms>'
             xml_output += '<Date><DateTimeQualifier1>ORS</DateTimeQualifier1>'
-            xml_output += '<Date1>' +today+ '</Date1></Date>'
+            xml_output += '<Date1>' + today + '</Date1></Date>'
             cust_rec = sale_obj.partner_id
             ship_address_rec = sale_obj.partner_shipping_id
             
-            #customer contact details
+            # customer contact details
             xml_output += '<Contact><ContactTypeCode>CH</ContactTypeCode>'
-            xml_output += '<ContactName>' +str(cust_rec.name)+ '</ContactName>'
-            xml_output += '<PrimaryPhone>' +str(cust_rec.phone)+ '</PrimaryPhone>'
-            xml_output += '<PrimaryFax>' +str(cust_rec.fax)+ '</PrimaryFax>'
-            xml_output += '<PrimaryEmail>' +str(cust_rec.email)+ '</PrimaryEmail></Contact>'
+            xml_output += '<ContactName>' + str(cust_rec.name) + '</ContactName>'
+            xml_output += '<PrimaryPhone>' + str(cust_rec.phone) + '</PrimaryPhone>'
+            xml_output += '<PrimaryFax>' + str(cust_rec.fax) + '</PrimaryFax>'
+            xml_output += '<PrimaryEmail>' + str(cust_rec.email) + '</PrimaryEmail></Contact>'
 
-            #contact address details
+            # contact address details
             xml_output += '<Address><AddressTypeCode>FW</AddressTypeCode>'
             xml_output += '<LocationCodeQualifier>1</LocationCodeQualifier>'
             xml_output += '<AddressLocationNumber>11111</AddressLocationNumber>'
-            xml_output += '<AddressName>' +str(ship_address_rec.name)+ '</AddressName>'
-            xml_output += '<Address1>' +str(ship_address_rec.street)+ '</Address1>'
-            xml_output += '<Address2>' +str(ship_address_rec.street2)+ '</Address2>'
-            xml_output += '<City>' +str(ship_address_rec.city)+ '</City>'
-            xml_output += '<State>' +str(ship_address_rec.state_id.code)+ '</State>'
-            xml_output += '<PostalCode>' +str(ship_address_rec.zip)+ '</PostalCode>'
-            xml_output += '<Country>' +str(ship_address_rec.country_id.code)+ '</Country>'
+            xml_output += '<AddressName>' + str(ship_address_rec.name) + '</AddressName>'
+            xml_output += '<Address1>' + str(ship_address_rec.street) + '</Address1>'
+            xml_output += '<Address2>' + str(ship_address_rec.street2) + '</Address2>'
+            xml_output += '<City>' + str(ship_address_rec.city) + '</City>'
+            xml_output += '<State>' + str(ship_address_rec.state_id.code) + '</State>'
+            xml_output += '<PostalCode>' + str(ship_address_rec.zip) + '</PostalCode>'
+            xml_output += '<Country>' + str(ship_address_rec.country_id.code) + '</Country>'
             xml_output += '<Contact><ContactTypeCode>CH</ContactTypeCode>'
-            xml_output += '<ContactName>' +str(cust_rec.name)+ '</ContactName>'
-            xml_output += '<PrimaryPhone>' +str(cust_rec.phone)+ '</PrimaryPhone>'
-            xml_output += '<PrimaryFax>' +str(cust_rec.fax)+ '</PrimaryFax>'
-            xml_output += '<PrimaryEmail>' +str(cust_rec.email)+ '</PrimaryEmail></Contact></Address>'
+            xml_output += '<ContactName>' + str(cust_rec.name) + '</ContactName>'
+            xml_output += '<PrimaryPhone>' + str(cust_rec.phone) + '</PrimaryPhone>'
+            xml_output += '<PrimaryFax>' + str(cust_rec.fax) + '</PrimaryFax>'
+            xml_output += '<PrimaryEmail>' + str(cust_rec.email) + '</PrimaryEmail></Contact></Address>'
             
-            #FOBRelatedInstruction
-            xml_output += '<FOBRelatedInstruction><FOBPayCode>'+str(sale_obj.fob_pay_code)+'</FOBPayCode>'
-            xml_output += '<FOBLocationQualifier>' +str(sale_obj.fob_location_qualifier)+ '</FOBLocationQualifier>'
-            xml_output += '<FOBLocationDescription>' +str(sale_obj.fob_location_description)+ '</FOBLocationDescription>'
-            xml_output += '<FOBTitlePassageCode>' +str(sale_obj.fob_title_passage_code)+ '</FOBTitlePassageCode>'
-            xml_output += '<FOBTitlePassageLocation>' +str(sale_obj.fob_title_passage_location)+ '</FOBTitlePassageLocation></FOBRelatedInstruction>'
+            # FOBRelatedInstruction
+            xml_output += '<FOBRelatedInstruction><FOBPayCode>' + str(sale_obj.fob_pay_code) + '</FOBPayCode>'
+            xml_output += '<FOBLocationQualifier>' + str(sale_obj.fob_location_qualifier) + '</FOBLocationQualifier>'
+            xml_output += '<FOBLocationDescription>' + str(sale_obj.fob_location_description) + '</FOBLocationDescription>'
+            xml_output += '<FOBTitlePassageCode>' + str(sale_obj.fob_title_passage_code) + '</FOBTitlePassageCode>'
+            xml_output += '<FOBTitlePassageLocation>' + str(sale_obj.fob_title_passage_location) + '</FOBTitlePassageLocation></FOBRelatedInstruction>'
             
-            #CarrierInformation
-            xml_output += '<CarrierInformation><CarrierTransMethodCode>'+str(sale_obj.carrier_trans_method_code)+'</CarrierTransMethodCode>'
-            xml_output += '<CarrierAlphaCode>' +str(sale_obj.carrier_alpha_code)+ '</CarrierAlphaCode>'
-            xml_output += '<CarrierRouting>' +str(sale_obj.carrier_routing)+ '</CarrierRouting>'
-            xml_output += '<RoutingSequenceCode>' +str(sale_obj.routing_sequence_code)+ '</RoutingSequenceCode>'
-            xml_output += '<ServiceLevelCodes><ServiceLevelCode>' +str(sale_obj.service_leve_code)+ '</ServiceLevelCode></ServiceLevelCodes></CarrierInformation>'
+            # CarrierInformation
+            xml_output += '<CarrierInformation><CarrierTransMethodCode>' + str(sale_obj.carrier_trans_method_code) + '</CarrierTransMethodCode>'
+            xml_output += '<CarrierAlphaCode>' + str(sale_obj.carrier_alpha_code) + '</CarrierAlphaCode>'
+            xml_output += '<CarrierRouting>' + str(sale_obj.carrier_routing) + '</CarrierRouting>'
+            xml_output += '<RoutingSequenceCode>' + str(sale_obj.routing_sequence_code) + '</RoutingSequenceCode>'
+            xml_output += '<ServiceLevelCodes><ServiceLevelCode>' + str(sale_obj.service_leve_code) + '</ServiceLevelCode></ServiceLevelCodes></CarrierInformation>'
             
-            #Reference
-            xml_output += '<Reference><ReferenceQual>'+str(sale_obj.reference_qual)+'</ReferenceQual>'
-            xml_output += '<ReferenceID>' +str(sale_obj.reference_id)+ '</ReferenceID>'
-            xml_output += '<Description>' +str(sale_obj.ref_description)+ '</Description></Reference>'
+            # Reference
+            xml_output += '<Reference><ReferenceQual>' + str(sale_obj.reference_qual) + '</ReferenceQual>'
+            xml_output += '<ReferenceID>' + str(sale_obj.reference_id) + '</ReferenceID>'
+            xml_output += '<Description>' + str(sale_obj.ref_description) + '</Description></Reference>'
             
-            #Notes
-            xml_output += '<Notes><NoteCode>'+str(sale_obj.note_code)+'</NoteCode>'
-            xml_output += '<NoteInformationField>' +str(sale_obj.note_information_field)+ '</NoteInformationField></Notes>'
+            # Notes
+            xml_output += '<Notes><NoteCode>' + str(sale_obj.note_code) + '</NoteCode>'
+            xml_output += '<NoteInformationField>' + str(sale_obj.note_information_field) + '</NoteInformationField></Notes>'
             
-            #ChargesAllowances
-            xml_output += '<ChargesAllowances><AllowChrgIndicator>'+str(sale_obj.allow_chrg_indicator)+'</AllowChrgIndicator>'
-            xml_output += '<AllowChrgCode>' +str(sale_obj.allow_chrg_code)+ '</AllowChrgCode>'
-            xml_output += '<AllowChrgAgencyCode>' +str(sale_obj.allow_chrg_agency_code)+ '</AllowChrgAgencyCode>'
-            xml_output += '<AllowChrgAgency>' +str(sale_obj.allow_chrg_agency)+ '</AllowChrgAgency>'
-            xml_output += '<AllowChrgAmt>' +str(sale_obj.allow_chrg_amt)+ '</AllowChrgAmt>'
-            xml_output += '<AllowChrgPercentQual>' +str(sale_obj.allow_chrg_percent_qual)+ '</AllowChrgPercentQual>'
-            xml_output += '<AllowChrgPercent>' +str(sale_obj.allow_chrg_percent)+ '</AllowChrgPercent>'
-            xml_output += '<AllowChrgHandlingCode>' +str(sale_obj.allow_chrg_handling_code)+ '</AllowChrgHandlingCode>'
-            xml_output += '<ReferenceIdentification>' +str(sale_obj.reference_identification)+ '</ReferenceIdentification>'
-            xml_output += '<AllowChrgHandlingDescription>' +str(sale_obj.allow_chrg_handling_description)+ '</AllowChrgHandlingDescription></ChargesAllowances></Header><LineItems>'
+            # ChargesAllowances
+            xml_output += '<ChargesAllowances><AllowChrgIndicator>' + str(sale_obj.allow_chrg_indicator) + '</AllowChrgIndicator>'
+            xml_output += '<AllowChrgCode>' + str(sale_obj.allow_chrg_code) + '</AllowChrgCode>'
+            xml_output += '<AllowChrgAgencyCode>' + str(sale_obj.allow_chrg_agency_code) + '</AllowChrgAgencyCode>'
+            xml_output += '<AllowChrgAgency>' + str(sale_obj.allow_chrg_agency) + '</AllowChrgAgency>'
+            xml_output += '<AllowChrgAmt>' + str(sale_obj.allow_chrg_amt) + '</AllowChrgAmt>'
+            xml_output += '<AllowChrgPercentQual>' + str(sale_obj.allow_chrg_percent_qual) + '</AllowChrgPercentQual>'
+            xml_output += '<AllowChrgPercent>' + str(sale_obj.allow_chrg_percent) + '</AllowChrgPercent>'
+            xml_output += '<AllowChrgHandlingCode>' + str(sale_obj.allow_chrg_handling_code) + '</AllowChrgHandlingCode>'
+            xml_output += '<ReferenceIdentification>' + str(sale_obj.reference_identification) + '</ReferenceIdentification>'
+            xml_output += '<AllowChrgHandlingDescription>' + str(sale_obj.allow_chrg_handling_description) + '</AllowChrgHandlingDescription></ChargesAllowances></Header><LineItems>'
             
-            total_lines=0
-            total_qty=0
-            total_weight=0
-            #Create the text string for 855 order acknowledgement
+            total_lines = 0
+            total_qty = 0
+            total_weight = 0
+            # Create the text string for 855 order acknowledgement
             for line in sale_lines:
                 total_lines += 1
                 est_del_date = ''
@@ -207,21 +207,21 @@ class SaleOrder(models.Model):
                 accept_code = ''
                 
                 if line.edi_est_ship_date:
-                    est_ship_date = datetime.strptime(line.edi_est_ship_date,'%Y-%m-%d')       
+                    est_ship_date = datetime.strptime(line.edi_est_ship_date, '%Y-%m-%d')       
                     est_ship_date = est_ship_date.strftime('%m/%d/%Y')
                         
                 if line.edi_line_msg == 'reject':
-                    accept_code='CC'
+                    accept_code = 'CC'
                     
                 elif line.edi_line_msg == 'backorder':
-                    accept_code='IB'
+                    accept_code = 'IB'
                     
                 else:
-                    accept_code='IA'
+                    accept_code = 'IA'
                     
                 uom = line.product_uom.name 
                 quantity = int(line.product_uom_qty)
-                total_qty+=quantity
+                total_qty += quantity
                 total_weight += (line.product_id.weight * quantity)    
                 original_po_qty = int(line.edi_line_qty)
                 
@@ -231,115 +231,115 @@ class SaleOrder(models.Model):
                 else:
                     print "*****  UOM is Not EA (Each)  *****"                            
                 
-                #line items
+                # line items
                 xml_output += '<LineItem><OrderLine>'
-                xml_output += '<LineSequenceNumber>' +str(line.id)+ '</LineSequenceNumber>'
-                xml_output += '<BuyerPartNumber>' +str(line.buyer_part_number)+ '</BuyerPartNumber>'
-                xml_output += '<VendorPartNumber>' +str(line.vendor_part_number)+ '</VendorPartNumber>'
-                xml_output += '<ConsumerPackageCode>' +str(line.consumer_package_code)+ '</ConsumerPackageCode>'
-                xml_output += '<GTIN>' +str(line.gtin)+ '</GTIN>'
-                xml_output += '<UPCCaseCode>' +str(line.upc_case_code)+ '</UPCCaseCode>'
+                xml_output += '<LineSequenceNumber>' + str(line.id) + '</LineSequenceNumber>'
+                xml_output += '<BuyerPartNumber>' + str(line.buyer_part_number) + '</BuyerPartNumber>'
+                xml_output += '<VendorPartNumber>' + str(line.vendor_part_number) + '</VendorPartNumber>'
+                xml_output += '<ConsumerPackageCode>' + str(line.consumer_package_code) + '</ConsumerPackageCode>'
+                xml_output += '<GTIN>' + str(line.gtin) + '</GTIN>'
+                xml_output += '<UPCCaseCode>' + str(line.upc_case_code) + '</UPCCaseCode>'
                 xml_output += '<ProductID><PartNumberQual>MN</PartNumberQual>'
-                xml_output += '<PartNumber>' +str(line.product_id.default_code)+ '</PartNumber></ProductID>'
-                xml_output += '<OrderQty>' +str(uom)+ '</OrderQty>'
-                xml_output += '<OrderQtyUOM>' +str(line.edi_line_qty)+ '</OrderQtyUOM>'
-                xml_output += '<PurchasePrice>' +str(line.price_unit)+ '</PurchasePrice>'
-                xml_output += '<PurchasePriceBasis>' +str(line.purchase_price_basis)+ '</PurchasePriceBasis>'
-                xml_output += '<BuyersCurrency>' +str(sale_obj.pricelist_id.currency_id.name)+ '</BuyersCurrency>'
-                xml_output += '<ProductSizeCode>' +str(line.product_size_code)+ '</ProductSizeCode>'
-                xml_output += '<ProductSizeDescription>' +str(line.product_size_description)+ '</ProductSizeDescription>'
-                xml_output += '<ProductColorCode>' +str(line.product_color_code)+ '</ProductColorCode>'
-                xml_output += '<ProductColorDescription>' +str(line.product_color_description)+ '</ProductColorDescription>'
-                xml_output += '<ProductMaterialCode>' +str(line.product_material_code)+ '</ProductMaterialCode>'
-                xml_output += '<ProductMaterialDescription>' +str(line.product_material_description)+ '</ProductMaterialDescription>'
-                xml_output += '<Department>' +str(line.department)+ '</Department>'
-                xml_output += '<Class>' +str(line.classs)+ '</Class></OrderLine>'
+                xml_output += '<PartNumber>' + str(line.product_id.default_code) + '</PartNumber></ProductID>'
+                xml_output += '<OrderQty>' + str(uom) + '</OrderQty>'
+                xml_output += '<OrderQtyUOM>' + str(line.edi_line_qty) + '</OrderQtyUOM>'
+                xml_output += '<PurchasePrice>' + str(line.price_unit) + '</PurchasePrice>'
+                xml_output += '<PurchasePriceBasis>' + str(line.purchase_price_basis) + '</PurchasePriceBasis>'
+                xml_output += '<BuyersCurrency>' + str(sale_obj.pricelist_id.currency_id.name) + '</BuyersCurrency>'
+                xml_output += '<ProductSizeCode>' + str(line.product_size_code) + '</ProductSizeCode>'
+                xml_output += '<ProductSizeDescription>' + str(line.product_size_description) + '</ProductSizeDescription>'
+                xml_output += '<ProductColorCode>' + str(line.product_color_code) + '</ProductColorCode>'
+                xml_output += '<ProductColorDescription>' + str(line.product_color_description) + '</ProductColorDescription>'
+                xml_output += '<ProductMaterialCode>' + str(line.product_material_code) + '</ProductMaterialCode>'
+                xml_output += '<ProductMaterialDescription>' + str(line.product_material_description) + '</ProductMaterialDescription>'
+                xml_output += '<Department>' + str(line.department) + '</Department>'
+                xml_output += '<Class>' + str(line.classs) + '</Class></OrderLine>'
                 
-                #date
-                xml_output += '<Date><DateTimeQualifier1>' +str(line.price_unit)+ '</DateTimeQualifier1>'
-                xml_output += '<Date1>' +today+ '</Date1></Date>'
+                # date
+                xml_output += '<Date><DateTimeQualifier1>' + str(line.price_unit) + '</DateTimeQualifier1>'
+                xml_output += '<Date1>' + today + '</Date1></Date>'
                 
-                #PriceInformation
-                xml_output += '<PriceInformation><PriceTypeIDCode>' +str(line.price_unit)+ '</PriceTypeIDCode>'
-                xml_output += '<UnitPrice>' +str(line.price_unit)+ '</UnitPrice>'
-                xml_output += '<Quantity>' +str(quantity)+ '</Quantity>'
-                xml_output += '<MultiplePriceQuantity>' +str(line.multiple_price_quantity)+ '</MultiplePriceQuantity>'
-                xml_output += '<ClassOfTradeCode>' +str(line.class_of_trade_code)+ '</ClassOfTradeCode></PriceInformation>'
+                # PriceInformation
+                xml_output += '<PriceInformation><PriceTypeIDCode>' + str(line.price_unit) + '</PriceTypeIDCode>'
+                xml_output += '<UnitPrice>' + str(line.price_unit) + '</UnitPrice>'
+                xml_output += '<Quantity>' + str(quantity) + '</Quantity>'
+                xml_output += '<MultiplePriceQuantity>' + str(line.multiple_price_quantity) + '</MultiplePriceQuantity>'
+                xml_output += '<ClassOfTradeCode>' + str(line.class_of_trade_code) + '</ClassOfTradeCode></PriceInformation>'
                 
-                #ProductOrItemDescription
-                xml_output += '<ProductOrItemDescription><ItemDescriptionType>' +str(line.item_description_type)+ '</ItemDescriptionType>'
-                xml_output += '<ProductCharacteristicCode>' +str(line.product_characteristic_code)+ '</ProductCharacteristicCode>'
-                xml_output += '<AgencyQualifierCode>' +str(line.agency_qualifier_code)+ '</AgencyQualifierCode>'
-                xml_output += '<ProductDescriptionCode>' +str(line.product_description_code)+ '</ProductDescriptionCode>'
-                xml_output += '<ProductDescription>' +str(line.name)+ '</ProductDescription></ProductOrItemDescription>'
+                # ProductOrItemDescription
+                xml_output += '<ProductOrItemDescription><ItemDescriptionType>' + str(line.item_description_type) + '</ItemDescriptionType>'
+                xml_output += '<ProductCharacteristicCode>' + str(line.product_characteristic_code) + '</ProductCharacteristicCode>'
+                xml_output += '<AgencyQualifierCode>' + str(line.agency_qualifier_code) + '</AgencyQualifierCode>'
+                xml_output += '<ProductDescriptionCode>' + str(line.product_description_code) + '</ProductDescriptionCode>'
+                xml_output += '<ProductDescription>' + str(line.name) + '</ProductDescription></ProductOrItemDescription>'
                 
-                #PhysicalDetails
-                xml_output += '<PhysicalDetails><PackQualifier>' +str(line.pack_qualifier)+ '</PackQualifier>'
-                xml_output += '<PackValue>' +str(line.pack_value)+ '</PackValue>'
-                xml_output += '<PackSize>' +str(line.pack_size)+ '</PackSize>'
-                xml_output += '<PackUOM>' +str(line.pack_uom)+ '</PackUOM>'
-                xml_output += '<PackingMedium>' +str(line.packing_medium)+ '</PackingMedium>'
-                xml_output += '<PackingMaterial>' +str(line.packing_material)+ '</PackingMaterial>'
-                xml_output += '<PackWeight>' +str(line.pack_weight)+ '</PackWeight>'
-                xml_output += '<PackWeightUOM>' +str(line.pack_weight_uom)+ '</ProductDescription></PackWeightUOM>'
+                # PhysicalDetails
+                xml_output += '<PhysicalDetails><PackQualifier>' + str(line.pack_qualifier) + '</PackQualifier>'
+                xml_output += '<PackValue>' + str(line.pack_value) + '</PackValue>'
+                xml_output += '<PackSize>' + str(line.pack_size) + '</PackSize>'
+                xml_output += '<PackUOM>' + str(line.pack_uom) + '</PackUOM>'
+                xml_output += '<PackingMedium>' + str(line.packing_medium) + '</PackingMedium>'
+                xml_output += '<PackingMaterial>' + str(line.packing_material) + '</PackingMaterial>'
+                xml_output += '<PackWeight>' + str(line.pack_weight) + '</PackWeight>'
+                xml_output += '<PackWeightUOM>' + str(line.pack_weight_uom) + '</ProductDescription></PackWeightUOM>'
                 
-                #Reference
-                xml_output += '<Reference><ReferenceQual>'+str(sale_obj.reference_qual)+'</ReferenceQual>'
-                xml_output += '<ReferenceID>' +str(sale_obj.reference_id)+ '</ReferenceID>'
-                xml_output += '<Description>' +str(sale_obj.ref_description)+ '</Description></Reference>'
+                # Reference
+                xml_output += '<Reference><ReferenceQual>' + str(sale_obj.reference_qual) + '</ReferenceQual>'
+                xml_output += '<ReferenceID>' + str(sale_obj.reference_id) + '</ReferenceID>'
+                xml_output += '<Description>' + str(sale_obj.ref_description) + '</Description></Reference>'
                 
-                #Notes
-                xml_output += '<Notes><NoteCode>'+str(sale_obj.note_code)+'</NoteCode>'
-                xml_output += '<NoteInformationField>' +str(sale_obj.note_information_field)+ '</NoteInformationField></Notes>'
+                # Notes
+                xml_output += '<Notes><NoteCode>' + str(sale_obj.note_code) + '</NoteCode>'
+                xml_output += '<NoteInformationField>' + str(sale_obj.note_information_field) + '</NoteInformationField></Notes>'
                 
-                #contact address details
+                # contact address details
                 xml_output += '<Address><AddressTypeCode>FW</AddressTypeCode>'
-                xml_output += '<AddressName>' +str(ship_address_rec.name)+ '</AddressName>'
-                xml_output += '<Address1>' +str(ship_address_rec.street)+ '</Address1>'
-                xml_output += '<City>' +str(ship_address_rec.city)+ '</City>'
-                xml_output += '<State>' +str(ship_address_rec.state_id.code)+ '</State>'
-                xml_output += '<PostalCode>' +str(ship_address_rec.zip)+ '</PostalCode>'
-                xml_output += '<Country>' +str(ship_address_rec.country_id.code)+ '</Country></Address>'
+                xml_output += '<AddressName>' + str(ship_address_rec.name) + '</AddressName>'
+                xml_output += '<Address1>' + str(ship_address_rec.street) + '</Address1>'
+                xml_output += '<City>' + str(ship_address_rec.city) + '</City>'
+                xml_output += '<State>' + str(ship_address_rec.state_id.code) + '</State>'
+                xml_output += '<PostalCode>' + str(ship_address_rec.zip) + '</PostalCode>'
+                xml_output += '<Country>' + str(ship_address_rec.country_id.code) + '</Country></Address>'
                 
-                #ChargesAllowances
-                xml_output += '<ChargesAllowances><AllowChrgIndicator>'+str(line.allow_chrg_indicator)+'</AllowChrgIndicator>'
-                xml_output += '<AllowChrgCode>' +str(line.allow_chrg_code)+ '</AllowChrgCode>'
-                xml_output += '<AllowChrgAgencyCode>' +str(line.allow_chrg_agency_code)+ '</AllowChrgAgencyCode>'
-                xml_output += '<AllowChrgAgency>' +str(line.allow_chrg_agency)+ '</AllowChrgAgency>'
-                xml_output += '<AllowChrgAmt>' +str(line.allow_chrg_amt)+ '</AllowChrgAmt>'
-                xml_output += '<AllowChrgPercent>' +str(line.allow_chrg_percent)+ '</AllowChrgPercent>'
-                xml_output += '<PercentDollarBasis>' +str(line.percent_dollar_basis)+ '</PercentDollarBasis>'
-                xml_output += '<AllowChrgRate>' +str(line.allow_chrg_rate)+ '</AllowChrgRate>'
-                xml_output += '<AllowChrgQtyUOM>' +str(line.allow_chrg_qty_uom)+ '</AllowChrgQtyUOM>'
-                xml_output += '<AllowChrgHandlingCode>' +str(line.allow_chrg_handling_code)+ '</AllowChrgHandlingCode>'
-                xml_output += '<AllowChrgHandlingDescription>' +str(line.allow_chrg_handling_description)+ '</AllowChrgHandlingDescription></ChargesAllowances>'
+                # ChargesAllowances
+                xml_output += '<ChargesAllowances><AllowChrgIndicator>' + str(line.allow_chrg_indicator) + '</AllowChrgIndicator>'
+                xml_output += '<AllowChrgCode>' + str(line.allow_chrg_code) + '</AllowChrgCode>'
+                xml_output += '<AllowChrgAgencyCode>' + str(line.allow_chrg_agency_code) + '</AllowChrgAgencyCode>'
+                xml_output += '<AllowChrgAgency>' + str(line.allow_chrg_agency) + '</AllowChrgAgency>'
+                xml_output += '<AllowChrgAmt>' + str(line.allow_chrg_amt) + '</AllowChrgAmt>'
+                xml_output += '<AllowChrgPercent>' + str(line.allow_chrg_percent) + '</AllowChrgPercent>'
+                xml_output += '<PercentDollarBasis>' + str(line.percent_dollar_basis) + '</PercentDollarBasis>'
+                xml_output += '<AllowChrgRate>' + str(line.allow_chrg_rate) + '</AllowChrgRate>'
+                xml_output += '<AllowChrgQtyUOM>' + str(line.allow_chrg_qty_uom) + '</AllowChrgQtyUOM>'
+                xml_output += '<AllowChrgHandlingCode>' + str(line.allow_chrg_handling_code) + '</AllowChrgHandlingCode>'
+                xml_output += '<AllowChrgHandlingDescription>' + str(line.allow_chrg_handling_description) + '</AllowChrgHandlingDescription></ChargesAllowances>'
                 
-                #line item acknowledgement                
+                # line item acknowledgement                
                 xml_output += '<LineItemAcknowledgement>'
-                xml_output += '<ItemStatusCode>' +str(line.edi_line_msg)+ '</ItemStatusCode>'
-                xml_output += '<ItemScheduleQty>' +str(quantity)+ '</ItemScheduleQty>'
-                xml_output += '<ItemScheduleUOM>' +str(uom)+ '</ItemScheduleUOM>'
+                xml_output += '<ItemStatusCode>' + str(line.edi_line_msg) + '</ItemStatusCode>'
+                xml_output += '<ItemScheduleQty>' + str(quantity) + '</ItemScheduleQty>'
+                xml_output += '<ItemScheduleUOM>' + str(uom) + '</ItemScheduleUOM>'
                 xml_output += '<ItemScheduleQualifier>002</ItemScheduleQualifier>'
-                xml_output += '<ItemScheduleDate>' +str(line.edi_est_ship_date)+ '</ItemScheduleDate></LineItemAcknowledgement>'
+                xml_output += '<ItemScheduleDate>' + str(line.edi_est_ship_date) + '</ItemScheduleDate></LineItemAcknowledgement>'
                     
                 xml_output += '<PriceInformation><PriceTypeIDCode>FCP</PriceTypeIDCode>'
-                xml_output += '<UnitPrice>' +str(line.price_unit)+ '</UnitPrice></PriceInformation>'
+                xml_output += '<UnitPrice>' + str(line.price_unit) + '</UnitPrice></PriceInformation>'
                 
                 for tax in line.tax_id:
                 
                     xml_output += '<Tax><TaxTypeCode>H780</TaxTypeCode>'
-                    xml_output += '<TaxAmount>' +str(1+tax.amount/100*line.price_unit)+ '</TaxAmount>'
-                    xml_output += '<TaxPercent>' +str(tax.amount/100)+ '</TaxPercent><TaxExemptCode>0</TaxExemptCode><TaxID>99990000</TaxID></Tax>'
+                    xml_output += '<TaxAmount>' + str(1 + tax.amount / 100 * line.price_unit) + '</TaxAmount>'
+                    xml_output += '<TaxPercent>' + str(tax.amount / 100) + '</TaxPercent><TaxExemptCode>0</TaxExemptCode><TaxID>99990000</TaxID></Tax>'
                     
                 xml_output += '</LineItem>'
                 
             xml_output += '</LineItems>'
             
-            #Summary
-            xml_output += '<Summary><TotalAmount>'+str(sale_obj.amount_total)+'</TotalAmount>'
-            xml_output += '<TotalLineItemNumber>' +str(total_lines)+ '</TotalLineItemNumber>'
-            xml_output += '<TotalQuantity>' +str(total_qty)+ '</TotalQuantity>'
-            xml_output += '<TotalWeight>' +str(total_weight)+ '</TotalWeight>'
+            # Summary
+            xml_output += '<Summary><TotalAmount>' + str(sale_obj.amount_total) + '</TotalAmount>'
+            xml_output += '<TotalLineItemNumber>' + str(total_lines) + '</TotalLineItemNumber>'
+            xml_output += '<TotalQuantity>' + str(total_qty) + '</TotalQuantity>'
+            xml_output += '<TotalWeight>' + str(total_weight) + '</TotalWeight>'
             xml_output += '<TotalWeightUOM>0</TotalWeightUOM>'
             xml_output += '<TotalVolume>0</TotalVolume>'
             xml_output += '<TotalVolumeUOM>0</TotalVolumeUOM></Summary>'
@@ -352,7 +352,7 @@ class SaleOrder(models.Model):
             
             xml_output += '</OrderAck></OrderAcks>'
                 
-            #Write ASN doc to text file    
+            # Write ASN doc to text file    
             filename = '855_' + today + '%s.txt' % num
             filename.replace('/', '_')
             fd = open(OUT_PATH + '/' + filename, 'w')
@@ -363,8 +363,8 @@ class SaleOrder(models.Model):
                    
     def _create_855_wrapper(self, cr, uid, context=None):
     
-        #search for invoices that are ack_yes = True, edi_yes = True and 855_sent_timestamp = False
-        eligible_orders = self.search(cr, uid, [('ack_yes','=',True),('edi_yes','=',True),('855_sent_timestamp','=',False)], context=context)
+        # search for invoices that are ack_yes = True, edi_yes = True and 855_sent_timestamp = False
+        eligible_orders = self.search(cr, uid, [('ack_yes', '=', True), ('edi_yes', '=', True), ('855_sent_timestamp', '=', False)], context=context)
         
         return eligible_orders and self.create_855(cr, uid, eligible_orders, context=context) or False
           
@@ -374,7 +374,7 @@ class SaleOrder(models.Model):
         if context is None:
             context = {}
         
-        #execute the create_855 method
+        # execute the create_855 method
         self.create_855(cr, uid, ids, context=None)              
             
         return True
@@ -405,7 +405,7 @@ class SaleOrder(models.Model):
 
         res = super(SaleOrder, self)._prepare_procurement_group()       
         res['trading_partner_id'] = self.trading_partner_id and self.trading_partner_id.id or False
-        #res['edi_yes'] = self.trading_partner_id and self.edi_yes or False
+        # res['edi_yes'] = self.trading_partner_id and self.edi_yes or False
         res['edi_yes'] = True
         res['asn_shipment'] = self.asn_shipment or 'asn_id'
         res['ship_to_code'] = self.ship_to_code or ''
@@ -432,12 +432,12 @@ class SaleOrder(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
-        stock_picking_obj=self.pool['stock.picking']
+        stock_picking_obj = self.pool['stock.picking']
         pick = False
         
         for pick in self.picking_ids:
             
-            if pick.picking_type_id.id==2:
+            if pick.picking_type_id.id == 2:
 
                 break
         
@@ -574,7 +574,7 @@ class SaleOrderLine(osv.osv):
         'ack_yes': fields.boolean('855', readonly=True, help="Will this order have an 855?"),
         'edi_est_del_date': fields.date('Est. Del. Date', help="Line Item Estimated Delivery Date"),
         'edi_est_ship_date': fields.date('Est. Ship Date', help="Line Item Estimated Shipping Date"),
-        'edi_line_msg': fields.selection((('reject','Reject'), ('accept','Accept'), ('backorder','Backorder')),'EDI Line Status'),
+        'edi_line_msg': fields.selection((('reject', 'Reject'), ('accept', 'Accept'), ('backorder', 'Backorder')), 'EDI Line Status'),
         'ship_not_before_date': fields.date('Do Not Ship Before This Date', help="Do Not Ship Before This Date."),
         'cancel_after_date': fields.date('Cancel if Shipped After This Date', help="Cancel if Shipped After This Date."),
         'trading_partner_id': fields.many2one('edi.config', 'Trading Partner', help='EDI Configuration information for partner'),
@@ -621,7 +621,7 @@ class SaleOrderLine(osv.osv):
         'allow_chrg_rate':fields.float('AllowChrgRate', help="Amount of the allowance or charge."),
         'allow_chrg_handling_code':fields.char('AllowChrgHandlingCode', help="Code indicating method of handling for an allowance or charge.."),
         'allow_chrg_qty_uom':fields.char('AllowChrgQtyUOM', help=""),
-        'allow_chrg_handling_description':fields.char('AllowChrgHandlingDescription', help="Free-form textual description of the note."),        
+        'allow_chrg_handling_description':fields.char('AllowChrgHandlingDescription', help="Free-form textual description of the note."),
     }
     
     def _get_commitment_date(self, cr, uid, line, context=None):

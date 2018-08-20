@@ -46,15 +46,15 @@ class StockMove(models.Model):
             edi_yes = move.procurement_id.edi_yes
             if edi_yes:
                 res = {}
-                res['trading_partner_id'] =\
+                res['trading_partner_id'] = \
                     move.procurement_id.trading_partner_id and\
                     move.procurement_id.trading_partner_id.id or False
                 res['edi_yes'] = move.procurement_id.trading_partner_id\
                                  and edi_yes or False
-                res['ship_not_before_date'] =\
+                res['ship_not_before_date'] = \
                     move.procurement_id.trading_partner_id and\
                     move.procurement_id.ship_not_before_date or False
-                res['cancel_after_date'] =\
+                res['cancel_after_date'] = \
                     move.procurement_id.trading_partner_id and\
                     move.procurement_id.cancel_after_date or False
                 picking.write(res)

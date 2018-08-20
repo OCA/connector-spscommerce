@@ -9,7 +9,7 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DA
 
 
 class product_pricelist(osv.osv):
-    _inherit= 'product.pricelist'
+    _inherit = 'product.pricelist'
      
     def price_get_wrapper(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         price = self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner, context=context)[ids][0]       
@@ -163,8 +163,8 @@ class stock_picking(osv.osv):
             
             for operation in operations:
             
-                #assign edi_line_num and po_number to pack operation, move by move.
-                link_ids = stock_move_op_link_obj.search(cr, uid, [('operation_id','=',operation.id)], context=context) or []
+                # assign edi_line_num and po_number to pack operation, move by move.
+                link_ids = stock_move_op_link_obj.search(cr, uid, [('operation_id', '=', operation.id)], context=context) or []
                 move = False
                 
                 for link_id in link_ids:
@@ -191,22 +191,22 @@ class stock_picking(osv.osv):
         if picking.origin:
             
             sale_obj = self.pool['sale.order']
-            sale_id = sale_obj.search(cr, uid, [('name','=',picking.origin)], context=context)
+            sale_id = sale_obj.search(cr, uid, [('name', '=', picking.origin)], context=context)
             
-            #look back to the sale order and get the edi field values and write them to the picking            
+            # look back to the sale order and get the edi field values and write them to the picking            
             if sale_id:
             
                 sale_order = sale_obj.browse(cr, uid, sale_id[0], context=context)
                 data = {
                     'ship_not_before_date': sale_order.ship_not_before_date,
                     'cancel_after_date': sale_order.cancel_after_date,
-                    'client_order_ref': sale_order.client_order_ref,    
+                    'client_order_ref': sale_order.client_order_ref,
                     'edi_yes': sale_order.edi_yes,
                     'trading_partner_id': sale_order.trading_partner_id.id,
                     'bol_num': sale_order.bol_num,
-                    #'tracking_number': sale_order.tracking_number,
+                    # 'tracking_number': sale_order.tracking_number,
                     'scac_code': sale_order.scac_code,
-                    'ship_to_code': sale_order.ship_to_code,                   
+                    'ship_to_code': sale_order.ship_to_code,
                 }
                 
                 picking.write(data)
@@ -238,19 +238,19 @@ class stock_picking(osv.osv):
         
         for picking_id in picking_ids:
         
-            #find links between this move and pack operations
+            # find links between this move and pack operations
             pack_op_ids = operation_obj.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
             operations = operation_obj.browse(cr, uid, pack_op_ids, context=context)           
             operations_dict[picking_id] = operations
             
-            #loop through quants found in packages for this particular move                   
+            # loop through quants found in packages for this particular move                   
             for operation in operations:                    
                 
                 if not operation.result_package_id:
                     continue
 
-                #assign edi_line_num and po_number to pack operation, move by move.
-                link_id = operation.qty_done and stock_move_op_link_obj.search(cr, uid, [('operation_id','=',operation.id)], context=context) or []
+                # assign edi_line_num and po_number to pack operation, move by move.
+                link_id = operation.qty_done and stock_move_op_link_obj.search(cr, uid, [('operation_id', '=', operation.id)], context=context) or []
                 move = link_id and stock_move_op_link_obj.browse(cr, uid, link_id, context=context).move_id or False   
                 
                 package = operation.result_package_id
@@ -267,23 +267,23 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, picking_ids, context=context):
             name += picking.name
             
-            #Grab the vendor_id and trading_partner_id for EDI in the edi_config.
+            # Grab the vendor_id and trading_partner_id for EDI in the edi_config.
             trading_partner_code = picking.trading_partner_id.partner_header_string
             vendor_code = picking.trading_partner_id.vendor_header_string
             
-            #ship_date
+            # ship_date
             ship_date = picking.date_done
             dateship_object = datetime.strptime(ship_date, DEFAULT_SERVER_DATETIME_FORMAT)
             ship_date = dateship_object.date()
             ship_date = str(ship_date)
             
-            #ship_time
+            # ship_time
             ship_time = picking.date_done
             dateship_object = datetime.strptime(ship_time, DEFAULT_SERVER_DATETIME_FORMAT)
             ship_time = dateship_object.time()
             ship_time = str(ship_time)
             
-            #Schedule_date
+            # Schedule_date
             schedule_date = picking.est_del_date
             if not schedule_date:
                 schedule_date = picking.max_date
@@ -293,7 +293,7 @@ class stock_picking(osv.osv):
             schedule_date = dateship_object.date()
             schedule_date = str(schedule_date)
             
-            #Schedule_time
+            # Schedule_time
             schedule_time = picking.est_del_date
             if not schedule_time:
                 schedule_time = picking.max_date
@@ -303,7 +303,7 @@ class stock_picking(osv.osv):
             schedule_time = dateship_object.time()
             schedule_time = str(schedule_time)
             
-            #Notice_date
+            # Notice_date
             notice_date = picking.ship_not_before_date
             if not notice_date:
                 notice_date = picking.min_date
@@ -569,13 +569,13 @@ class stock_picking(osv.osv):
             shipment_dict.get('Shipment').update(orderlevel_dict)
             shipment_dict.get('Shipment').get('OrderLevel').update(packlevel_dict)
             
-            #Sublines
+            # Sublines
             sublines_list = {'Sublines': []}
             total_lines = 0
             total_qty = 0
             total_weight = 0
                     
-            #for each sub line
+            # for each sub line
             for line in picking.move_lines:
                 total_lines += 1
                 total_qty += line.product_qty
@@ -606,7 +606,7 @@ class stock_picking(osv.osv):
                 subline_dict.get('Subline').update(pickingline_dict)
                 sublines_list.get('Sublines').append(subline_dict)
              
-            #shipment_dict.get('Shipment').get('OrderLevel').get('PackLevel').get('ItemLevel').update(sublines_list)
+            # shipment_dict.get('Shipment').get('OrderLevel').get('PackLevel').get('ItemLevel').update(sublines_list)
             shipment_dict.get('Shipment').get('OrderLevel').update(sublines_list)
             
             # summary
@@ -622,11 +622,11 @@ class stock_picking(osv.osv):
             shipments_list.get('Shipments').append(shipment_dict)
             processed += 1
             
-        #convert dictionary to xml
+        # convert dictionary to xml
         xml = dicttoxml.dicttoxml(shipments_list, attr_type=False, root=False)
-        xml = xml.replace('<item>','').replace('</item>','')
-        xml = xml.replace('<item>','').replace('<Shipments>','<?xml version="1.0" encoding="utf-8"?><Shipments xmlns="http://www.spscommerce.com/RSX">')
-        #Write ASN doc to text file
+        xml = xml.replace('<item>', '').replace('</item>', '')
+        xml = xml.replace('<item>', '').replace('<Shipments>', '<?xml version="1.0" encoding="utf-8"?><Shipments xmlns="http://www.spscommerce.com/RSX">')
+        # Write ASN doc to text file
         name = re.findall('\d+', name)[0]
         filename = '856_' + today + '%s.xml' % name
         filename.replace('/', '_')
@@ -637,8 +637,8 @@ class stock_picking(osv.osv):
         
     def _create_856_wrapper(self, cr, uid, context=None):
     
-        #search for invoices that are edi_yes = True and 856_sent_timestamp = False
-        eligible_pickings = self.search(cr, uid, [('edi_yes','=',True),('856_sent_timestamp','=',False)], context=context)       
+        # search for invoices that are edi_yes = True and 856_sent_timestamp = False
+        eligible_pickings = self.search(cr, uid, [('edi_yes', '=', True), ('856_sent_timestamp', '=', False)], context=context)       
         return eligible_pickings and self.create_text_856(cr, uid, eligible_pickings, context=context) or False
 
     # done as a server action        
