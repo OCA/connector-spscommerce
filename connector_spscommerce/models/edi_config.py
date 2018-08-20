@@ -10,11 +10,11 @@ class edi_config(osv.osv):
 
     _columns = {
         'edi_company_id': fields.many2one('res.company',
-                                          string ='EDI Company',
+                                          string='EDI Company',
                                           help="The Main EDI Company.",
                                           required=False, ondelete='cascade'),
         'route_id': fields.many2one('stock.location.route',
-                                    string ='Stock Transfer Route',
+                                    string='Stock Transfer Route',
                                     help="""Select Dropshipping if applicable
                                      or another route. This will be the route
                                       used in sale order lines."""),
