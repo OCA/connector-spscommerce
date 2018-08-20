@@ -458,9 +458,9 @@ def get_order_header(order_header):
          import
     """
     return\
-        order_header['Department'],\
-        order_header['PurchaseOrderNumber'],\
-        order_header['TradingPartnerId'],\
+        order_header['Department'], \
+        order_header['PurchaseOrderNumber'], \
+        order_header['TradingPartnerId'], \
         order_header['PurchaseOrderDate']
 
 
@@ -589,7 +589,7 @@ def create_sale_order(sock, uid, order_data):
     if partner_info['id']:
         partner_invoice_id = partner_info['id']
         partner_shipping_id = partner_info['id']
-    print "datetime.now().strftime('%Y-%m-%d %H:%M:%S')",\
+    print "datetime.now().strftime('%Y-%m-%d %H:%M:%S')", \
         datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sale_hash = {
         'incoterm': 14,  # hardcoded to "Delivery at Place"

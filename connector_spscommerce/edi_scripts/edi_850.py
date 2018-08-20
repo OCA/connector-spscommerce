@@ -542,7 +542,7 @@ def process_record(sock, uid, record, partner_rec, config_rec):
     print "Automatic workflow is: " + str(config_rec['auto_workflow'])
     automatic_workflow_id = config_rec['auto_workflow']
     # use the 850 PO info to create a sales order
-    sale_id, src_location_id, pricelist_id =\
+    sale_id, src_location_id, pricelist_id = \
         create_sale_order(sock, uid,
                           record['date'],
                           record['po_num'],
@@ -565,7 +565,7 @@ def process_record(sock, uid, record, partner_rec, config_rec):
     sale_name = get_sale_name(sock, uid, sale_id)
 
     # create SO LINE from dictionary we just created
-    product_ids, sale_line_ids =\
+    product_ids, sale_line_ids = \
         create_so_lines(sock, uid, sale_id,
                         record['upc'],
                         record['sku'],
