@@ -4,6 +4,7 @@
 import csv
 import itertools
 import xmlrpclib
+
 import edi_850
 from connect_info import ERP_WWW, DBNAME, USERNAME, PWD, IN_PATH
 
@@ -66,7 +67,6 @@ def connect_oerp():
     for row in data:
 
         if count == 1 and row[0] != 'H':
-
             print "INFO: FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED FIRST" \
                   " ROW WITH COLUMN HEADINGS:" \
                   " EDI Loop  | Order line | Partner | PO # | Date/UPC |" \

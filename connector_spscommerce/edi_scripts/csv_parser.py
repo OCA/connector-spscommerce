@@ -9,7 +9,6 @@ OUT_PATH = '/tmp/csv_export/'
 
 
 def parse_csv(file):
-
     # CSV COLUMNS
     cols = [
         'partner',
@@ -53,7 +52,6 @@ def parse_csv(file):
     for row in data:
 
         if count == 1 and row[0] != 'H':
-
             print """INFO: ***** FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED
              FIRST ROW WITH COLUMN HEADINGS:
               EDI Loop  | Order line | Partner | PO # | Date/UPC |

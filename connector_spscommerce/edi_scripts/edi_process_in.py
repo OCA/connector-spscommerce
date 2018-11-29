@@ -2,13 +2,14 @@
 # Copyright (c) Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import os
-import xmlrpclib
-import edi_850
 import shutil
-import xmltodict
+import xmlrpclib
 from datetime import datetime
-from connect_info import ERP_WWW, DBNAME, USERNAME, PWD, DEBUG, IN_PATH
 
+import xmltodict
+
+import edi_850
+from connect_info import ERP_WWW, DBNAME, USERNAME, PWD, DEBUG, IN_PATH
 
 test_me = """<?xml version="1.0" encoding='utf-8'?>
 <Orders>
@@ -281,32 +282,42 @@ def connect_oerp():
 
 
 def parse_csv(sock, uid, file):
-
     # note xmltodict.unparse(file) will convert it back to xml.  It will also
     # convert any dict to xml.
     orders = xmltodict.parse(test_me)
-#     order_dict = xmltodict.parse(test_me)
+    #     order_dict = xmltodict.parse(test_me)
     record = {}
 
     # improve process in
     for order in orders['Orders']:
-        record['address_type_code'] = order['Order']['Header']['Address']['AddressTypeCode']
-        record['location_code_qualifier'] = order['Order']['Header']['Address']['LocationCodeQualifier']
-        record['address_location_number'] = order['Order']['Header']['Address']['AddressLocationNumber']
-        record['address_name'] = order['Order']['Header']['Address']['AddressName']
-        record['address_alternate_name'] = order['Order']['Header']['Address']['AddressAlternateName']
+        record['address_type_code'] = order['Order']['Header']['Address'][
+            'AddressTypeCode']
+        record['location_code_qualifier'] = \
+            order['Order']['Header']['Address']['LocationCodeQualifier']
+        record['address_location_number'] = \
+            order['Order']['Header']['Address']['AddressLocationNumber']
+        record['address_name'] = order['Order']['Header']['Address'][
+            'AddressName']
+        record['address_alternate_name'] = order['Order']['Header']['Address'][
+            'AddressAlternateName']
         record['address1'] = order['Order']['Header']['Address']['Address1']
         record['address2'] = order['Order']['Header']['Address']['Address2']
         record['city'] = order['Order']['Header']['Address']['City']
         record['state'] = order['Order']['Header']['Address']['State']
-        record['postal_code'] = order['Order']['Header']['Address']['PostalCode']
+        record['postal_code'] = order['Order']['Header']['Address'][
+            'PostalCode']
         record['country'] = order['Order']['Header']['Address']['Country']
         record['contact'] = {}
-        record['contact']['contact_type_code'] = order['Order']['Header']['Address']['Contact']['ContactTypeCode']
-        record['contact']['contact_name'] = order['Order']['Header']['Address']['Contact']['ContactName']
-        record['contact']['primary_phone'] = order['Order']['Header']['Address']['Contact']['PrimaryPhone']
-        record['contact']['primary_fax'] = order['Order']['Header']['Address']['Contact']['PrimaryFax']
-        record['contact']['primary_email'] = order['Order']['Header']['Address']['Contact']['PrimaryEmail']
+        record['contact']['contact_type_code'] = \
+            order['Order']['Header']['Address']['Contact']['ContactTypeCode']
+        record['contact']['contact_name'] = \
+            order['Order']['Header']['Address']['Contact']['ContactName']
+        record['contact']['primary_phone'] = \
+            order['Order']['Header']['Address']['Contact']['PrimaryPhone']
+        record['contact']['primary_fax'] = \
+            order['Order']['Header']['Address']['Contact']['PrimaryFax']
+        record['contact']['primary_email'] = \
+            order['Order']['Header']['Address']['Contact']['PrimaryEmail']
         record['date'] = order['Order']['Header']['Date']['Date1']
         record['time'] = order['Order']['Header']['Date']['Time1']
         record['edi_error'] = False
@@ -316,62 +327,110 @@ def parse_csv(sock, uid, file):
         record['supplier_code'] = '123'
         record['ship_not_before_date'] = datetime.now().strftime('%Y-%m-%d')
         record['cancel_after_date'] = datetime.now().strftime('%Y-%m-%d')
-        record['trading_partner_id'] = order['Order']['Header']['OrderHeader']['TradingPartnerId']
+        record['trading_partner_id'] = order['Order']['Header']['OrderHeader'][
+            'TradingPartnerId']
         record['scac_code'] = ''
         record['bol_num'] = ''
         record['asn_shipment'] = ''
         record['tracking_num'] = ''
-        record['tset_purpose_code'] = order['Order']['Header']['OrderHeader']['TsetPurposeCode']
-        record['purchase_order_number'] = order['Order']['Header']['OrderHeader']['PurchaseOrderNumber']
-        record['purchase_order_type_code'] = order['Order']['Header']['OrderHeader']['PurchaseOrderTypeCode']
-        record['po_type_description'] = order['Order']['Header']['OrderHeader']['POTypeDescription']
-        record['ship_complete_code'] = order['Order']['Header']['OrderHeader']['ShipCompleteCode']
-        record['department'] = order['Order']['Header']['OrderHeader']['Department']
-        record['division'] = order['Order']['Header']['OrderHeader']['Division']
-        record['promotion_deal_number'] = order['Order']['Header']['OrderHeader']['PromotionDealNumber']
-        record['terms_type'] = order['Order']['Header']['PaymentTerms']['TermsType']
-        record['terms_basis_date_code'] = order['Order']['Header']['PaymentTerms']['TermsBasisDateCode']
-        record['terms_discount_percentage'] = order['Order']['Header']['PaymentTerms']['TermsDiscountPercentage']
-        record['terms_discount_due_days'] = order['Order']['Header']['PaymentTerms']['TermsDiscountDueDays']
-        record['terms_net_due_days'] = order['Order']['Header']['PaymentTerms']['TermsNetDueDays']
-        record['payment_method_code'] = order['Order']['Header']['PaymentTerms']['PaymentMethodCode']
-        record['fob_pay_code'] = order['Order']['Header']['FOBRelatedInstruction']['FOBPayCode']
-        record['fob_location_qualifier'] = order['Order']['Header']['FOBRelatedInstruction']['FOBLocationQualifier']
-        record['fob_location_description'] = order['Order']['Header']['FOBRelatedInstruction']['FOBLocationDescription']
+        record['tset_purpose_code'] = order['Order']['Header']['OrderHeader'][
+            'TsetPurposeCode']
+        record['purchase_order_number'] = \
+            order['Order']['Header']['OrderHeader']['PurchaseOrderNumber']
+        record['purchase_order_type_code'] = \
+            order['Order']['Header']['OrderHeader']['PurchaseOrderTypeCode']
+        record['po_type_description'] = \
+            order['Order']['Header']['OrderHeader']['POTypeDescription']
+        record['ship_complete_code'] = order['Order']['Header']['OrderHeader'][
+            'ShipCompleteCode']
+        record['department'] = order['Order']['Header']['OrderHeader'][
+            'Department']
+        record['division'] = order['Order']['Header']['OrderHeader'][
+            'Division']
+        record['promotion_deal_number'] = \
+            order['Order']['Header']['OrderHeader']['PromotionDealNumber']
+        record['terms_type'] = order['Order']['Header']['PaymentTerms'][
+            'TermsType']
+        record['terms_basis_date_code'] = \
+            order['Order']['Header']['PaymentTerms']['TermsBasisDateCode']
+        record['terms_discount_percentage'] = \
+            order['Order']['Header']['PaymentTerms']['TermsDiscountPercentage']
+        record['terms_discount_due_days'] = \
+            order['Order']['Header']['PaymentTerms']['TermsDiscountDueDays']
+        record['terms_net_due_days'] = \
+            order['Order']['Header']['PaymentTerms']['TermsNetDueDays']
+        record['payment_method_code'] = \
+            order['Order']['Header']['PaymentTerms']['PaymentMethodCode']
+        record['fob_pay_code'] = \
+            order['Order']['Header']['FOBRelatedInstruction']['FOBPayCode']
+        record['fob_location_qualifier'] = \
+            order['Order']['Header']['FOBRelatedInstruction'][
+                'FOBLocationQualifier']
+        record['fob_location_description'] = \
+            order['Order']['Header']['FOBRelatedInstruction'][
+                'FOBLocationDescription']
         record['fob_title_passage_code'] = ''
         record['fob_title_passage_location'] = ''
-        record['carrier_trans_method_code'] = order['Order']['Header']['CarrierInformation']['CarrierTransMethodCode']
-        record['carrier_alpha_code'] = order['Order']['Header']['CarrierInformation']['CarrierAlphaCode']
-        record['carrier_routing'] = order['Order']['Header']['CarrierInformation']['CarrierRouting']
+        record['carrier_trans_method_code'] = \
+            order['Order']['Header']['CarrierInformation'][
+                'CarrierTransMethodCode']
+        record['carrier_alpha_code'] = \
+            order['Order']['Header']['CarrierInformation']['CarrierAlphaCode']
+        record['carrier_routing'] = \
+            order['Order']['Header']['CarrierInformation']['CarrierRouting']
         record['routing_sequence_code'] = ''
         record['service_level_code'] = ''
-        record['reference_qual'] = order['Order']['Header']['Reference']['ReferenceQual']
-        record['reference_id'] = order['Order']['Header']['Reference']['ReferenceID']
-        record['ref_description'] = order['Order']['Header']['Reference']['Description']
+        record['reference_qual'] = order['Order']['Header']['Reference'][
+            'ReferenceQual']
+        record['reference_id'] = order['Order']['Header']['Reference'][
+            'ReferenceID']
+        record['ref_description'] = order['Order']['Header']['Reference'][
+            'Description']
         record['note_code'] = order['Order']['Header']['Notes']['NoteCode']
-        record['note_information_field'] = order['Order']['Header']['Notes']['NoteInformationField']
-        record['allow_chrg_indicator'] = order['Order']['Header']['ChargesAllowances']['AllowChrgIndicator']
-        record['allow_chrg_code'] = order['Order']['Header']['ChargesAllowances']['AllowChrgCode']
+        record['note_information_field'] = order['Order']['Header']['Notes'][
+            'NoteInformationField']
+        record['allow_chrg_indicator'] = \
+            order['Order']['Header']['ChargesAllowances']['AllowChrgIndicator']
+        record['allow_chrg_code'] = \
+            order['Order']['Header']['ChargesAllowances']['AllowChrgCode']
         record['allow_chrg_agency_code'] = ''
         record['allow_chrg_agency'] = ''
-        record['allow_chrg_amt'] = order['Order']['Header']['ChargesAllowances']['AllowChrgAmt']
-        record['allow_chrg_percent_qual'] = order['Order']['Header']['ChargesAllowances']['AllowChrgPercentQual']
-        record['allow_chrg_percent'] = order['Order']['Header']['ChargesAllowances']['AllowChrgPercent']
-        record['allow_chrg_handling_code'] = order['Order']['Header']['ChargesAllowances']['AllowChrgHandlingCode']
+        record['allow_chrg_amt'] = \
+            order['Order']['Header']['ChargesAllowances']['AllowChrgAmt']
+        record['allow_chrg_percent_qual'] = \
+            order['Order']['Header']['ChargesAllowances'][
+                'AllowChrgPercentQual']
+        record['allow_chrg_percent'] = \
+            order['Order']['Header']['ChargesAllowances']['AllowChrgPercent']
+        record['allow_chrg_handling_code'] = \
+            order['Order']['Header']['ChargesAllowances'][
+                'AllowChrgHandlingCode']
         record['reference_identification'] = ''
-        record['allow_chrg_handling_description'] = order['Order']['Header']['ChargesAllowances']['AllowChrgHandlingDescription']
+        record['allow_chrg_handling_description'] = \
+            order['Order']['Header']['ChargesAllowances'][
+                'AllowChrgHandlingDescription']
 
         record['order_line'] = {}
         for line in orders['Orders']['Order']['LineItems']:
             order_line_data = {
-                'product_qty': orders['Orders']['Order']['LineItems'][line]['OrderLine']['OrderQty'],
-                'product_uom': orders['Orders']['Order']['LineItems'][line]['OrderLine']['OrderQtyUOM'],
-                'sku': orders['Orders']['Order']['LineItems'][line]['OrderLine']['VendorPartNumber'],
+                'product_qty':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'OrderQty'],
+                'product_uom':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'OrderQtyUOM'],
+                'sku':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'VendorPartNumber'],
                 'edi_yes': False,
                 'asn_shipment': '123',
                 'po_number': '123',
-                'buyer_part_number': orders['Orders']['Order']['LineItems'][line]['OrderLine']['BuyerPartNumber'],
-                'edi_line_num': orders['Orders']['Order']['LineItems'][line]['OrderLine']['LineSequenceNumber'],
+                'buyer_part_number':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'BuyerPartNumber'],
+                'edi_line_num':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'LineSequenceNumber'],
                 'edi_line_qty': '123',
                 'ack_yes': '123',
                 'edi_est_del_date': datetime.now().strftime('%Y-%m-%d'),
@@ -379,50 +438,95 @@ def parse_csv(sock, uid, file):
                 'edi_line_msg': '123',
                 'ship_not_before_date': datetime.now().strftime('%Y-%m-%d'),
                 'cancel_after_date': datetime.now().strftime('%Y-%m-%d'),
-                'trading_partner_id': orders['Orders']['Order']['Header']['OrderHeader']['TradingPartnerId'],
+                'trading_partner_id':
+                    orders['Orders']['Order']['Header']['OrderHeader'][
+                        'TradingPartnerId'],
                 'edi_intransit_qty': 0,
                 'edi_outgoing_qty': 0,
                 'edi_avlforsale_qty': 0,
-                'vendor_part_number': orders['Orders']['Order']['LineItems'][line]['OrderLine']['VendorPartNumber'],
-                'consumer_package_code': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ConsumerPackageCode'],
-                'gtin': orders['Orders']['Order']['LineItems'][line]['OrderLine']['GTIN'],
-                'upc_case_code': orders['Orders']['Order']['LineItems'][line]['OrderLine']['UPCCaseCode'],
-                'purchase_price_basis': orders['Orders']['Order']['LineItems'][line]['OrderLine']['PurchasePrice'],
-                'product_size_code': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductSizeCode'],
-                'product_size_description': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductSizeDescription'],
-                'product_color_code': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductColorCode'],
-                'product_color_description': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductColorDescription'],
+                'vendor_part_number':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'VendorPartNumber'],
+                'consumer_package_code':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ConsumerPackageCode'],
+                'gtin':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'GTIN'],
+                'upc_case_code':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'UPCCaseCode'],
+                'purchase_price_basis':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'PurchasePrice'],
+                'product_size_code':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ProductSizeCode'],
+                'product_size_description':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ProductSizeDescription'],
+                'product_color_code':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ProductColorCode'],
+                'product_color_description':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ProductColorDescription'],
                 #                                'product_material_code':orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductMaterialCode'],
-                'product_material_description': orders['Orders']['Order']['LineItems'][line]['OrderLine']['ProductMaterialDescription'],
-                'department': orders['Orders']['Order']['LineItems'][line]['OrderLine']['Department'],
-                'classs': orders['Orders']['Order']['LineItems'][line]['OrderLine']['Class'],
-                'price_type_id_code': orders['Orders']['Order']['LineItems'][line]['PriceInformation']['PriceTypeIDCode'],
-                'edi_line_num': orders['Orders']['Order']['LineItems'][line]['OrderLine']['LineSequenceNumber'],
+                'product_material_description':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'ProductMaterialDescription'],
+                'department':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'Department'],
+                'classs':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'Class'],
+                'price_type_id_code':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'PriceInformation']['PriceTypeIDCode'],
+                'edi_line_num':
+                    orders['Orders']['Order']['LineItems'][line]['OrderLine'][
+                        'LineSequenceNumber'],
                 #                                 'multiple_price_quantity':orders['Orders']['Order']['LineItems'][line]['PriceInformation']['MultiplePriceQuantity'],
                 #                                 'class_of_trade_code':orders['Orders']['Order']['LineItems'][line]['PriceInformation']['ClassOfTradeCode'],
-                'item_description_type': orders['Orders']['Order']['LineItems'][line]['ProductOrItemDescription']['ItemDescriptionType'],
+                'item_description_type':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'ProductOrItemDescription']['ItemDescriptionType'],
                 'product_characteristic_code': '',
                 'agency_qualifier_code': '',
                 'product_description_code': '',
-                'pack_qualifier': orders['Orders']['Order']['LineItems'][line]['PhysicalDetails']['PackQualifier'],
-                'pack_value': orders['Orders']['Order']['LineItems'][line]['PhysicalDetails']['PackValue'],
-                'pack_size': orders['Orders']['Order']['LineItems'][line]['PhysicalDetails']['PackSize'],
-                'pack_uom': orders['Orders']['Order']['LineItems'][line]['PhysicalDetails']['PackUOM'],
+                'pack_qualifier': orders['Orders']['Order']['LineItems'][line][
+                    'PhysicalDetails']['PackQualifier'],
+                'pack_value': orders['Orders']['Order']['LineItems'][line][
+                    'PhysicalDetails']['PackValue'],
+                'pack_size': orders['Orders']['Order']['LineItems'][line][
+                    'PhysicalDetails']['PackSize'],
+                'pack_uom': orders['Orders']['Order']['LineItems'][line][
+                    'PhysicalDetails']['PackUOM'],
                 'packing_medium': '',
                 'packing_material': '',
                 'pack_weight': 0,
                 'pack_weight_uom': '',
                 'location_code_qualifier': '',
                 'location': '',
-                'allow_chrg_indicator': orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['AllowChrgIndicator'],
-                'allow_chrg_code': orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['AllowChrgCode'],
+                'allow_chrg_indicator':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'ChargesAllowances']['AllowChrgIndicator'],
+                'allow_chrg_code':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'ChargesAllowances']['AllowChrgCode'],
                 'allow_chrg_agency_code': '',
                 'allow_chrg_agency': '',
-                'allow_chrg_amt': orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['AllowChrgAmt'],
-                'allow_chrg_percent': orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['AllowChrgPercent'],
+                'allow_chrg_amt': orders['Orders']['Order']['LineItems'][line][
+                    'ChargesAllowances']['AllowChrgAmt'],
+                'allow_chrg_percent':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'ChargesAllowances']['AllowChrgPercent'],
                 'percent_dollar_basis': 0,
                 'allow_chrg_rate': 0,
-                'allow_chrg_handling_code': orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['AllowChrgHandlingCode'],
+                'allow_chrg_handling_code':
+                    orders['Orders']['Order']['LineItems'][line][
+                        'ChargesAllowances']['AllowChrgHandlingCode'],
                 'allow_chrg_qty_uom': '',
                 #                                 'allow_chrg_handling_description':orders['Orders']['Order']['LineItems'][line]['ChargesAllowances']['allow_chrg_handling_description'],
             }
@@ -457,7 +561,7 @@ def get_order_header(order_header):
         Output: dictionary with values for header to be used in sale order
          import
     """
-    return\
+    return \
         order_header['Department'], \
         order_header['PurchaseOrderNumber'], \
         order_header['TradingPartnerId'], \
@@ -500,7 +604,6 @@ def get_partner_info(
         state='',
         postal_code='',
         country=''):
-
     fields = [
         'is_company',
         'city',
@@ -553,7 +656,6 @@ def get_partner_info(
 
 
 def search_product(sock, uid, product_sku):
-
     args = [('default_code', '=', product_sku)]
     ids = sock.execute(DBNAME, uid, PWD, 'product.product', 'search', args)
     try:
@@ -665,7 +767,6 @@ def create_sale_order(sock, uid, order_data):
 
 
 def search_uom(sock, uid, uom):
-
     uom_id = ''
 
     args = [('name', 'ilike', uom)]
@@ -679,7 +780,6 @@ def search_uom(sock, uid, uom):
 
 
 def create_so_lines(sock, uid, sale_id, order_lines):
-
     sale_line_ids = []
 
     for line in order_lines:

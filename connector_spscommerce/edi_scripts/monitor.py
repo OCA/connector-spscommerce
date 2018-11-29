@@ -2,11 +2,11 @@
 # Copyright (c) Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import ftplib
-import re
-import time
 import logging
 import os
+import re
 import shutil
+import time
 
 HOST = ''  # IP Address
 PORT = 22
@@ -28,7 +28,6 @@ print "Current date & time " + time.strftime("%c")
 
 
 def ftp_connect(HOST, UNAME, PW):
-
     ftp = ftplib.FTP(HOST)
     try:
         ftp.login(UNAME, PW)
@@ -83,7 +82,7 @@ def process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR):
 
             try:
                 ftp.rename(SOURCE_DIR + filename, REMOTE_ARCHIVE + filename)
-                logging.info('Successfully transfered %s' % 
+                logging.info('Successfully transfered %s' %
                              filename + 'from remote host')
                 print 'Successful Transfer of: ' + filename + \
                       ' from remote host'
@@ -99,7 +98,7 @@ def process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR):
 
             try:
                 shutil.move(LOCAL_SOURCE_DIR + filename, ARCHIVE)
-                logging.info('Successfully transfered %s' % 
+                logging.info('Successfully transfered %s' %
                              filename + 'to remote host')
                 print 'Successful Transfer of: ' + filename + ' to remote host'
             except Exception:
@@ -110,7 +109,6 @@ def process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR):
 
 
 def transfer_files(ftp, files, SOURCE_DIR, DEST_DIR, transfer_type):
-
     res = True
 
     for filename in files:
@@ -130,14 +128,13 @@ def transfer_files(ftp, files, SOURCE_DIR, DEST_DIR, transfer_type):
         except Exception:
 
             res = False
-            logging.error('Error transferring ' + filename + 
+            logging.error('Error transferring ' + filename +
                           ' using transfer type: ' + transfer_type)
 
     return res
 
 
 def main():
-
     ftp = ftp_connect(HOST, UNAME, PW)
     process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR)
 

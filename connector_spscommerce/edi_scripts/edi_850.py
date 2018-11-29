@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import sys
 from datetime import datetime
+
 from connect_info import DBNAME, PWD
 
 
@@ -33,7 +34,6 @@ def get_country(sock, uid, country):
 
 
 def get_current_company(sock, uid):
-
     args = [('partner_id', '=', 1)]
     ids = sock.execute(DBNAME, uid, PWD, 'res.company', 'search', args)
 
@@ -52,7 +52,6 @@ def edi_config_id(
         company_id,
         partner_header_string,
         vendor_header_string):
-
     args = [('partner_header_string', '=', partner_header_string),
             ('vendor_header_string', '=', vendor_header_string)]
     ids = sock.execute(DBNAME, uid, PWD, 'edi.config', 'search', args)
@@ -69,7 +68,6 @@ def edi_config_id(
 
 
 def get_config(sock, uid, edi):
-
     fields = [
         'partner_header_string',
         'vendor_header_string',
@@ -95,7 +93,6 @@ def get_config(sock, uid, edi):
 
 
 def get_partner_info(sock, uid, partner_id):
-
     fields = [
         'is_company',
         'city',
@@ -152,7 +149,6 @@ def get_billing_partner(sock, uid, partner_id):
 
 
 def search_uom(sock, uid, uom):
-
     uom_id = ''
 
     args = [('name', 'ilike', uom)]
@@ -166,7 +162,6 @@ def search_uom(sock, uid, uom):
 
 
 def search_pmt_terms(sock, uid, payment_terms):
-
     pmt_id = ''
 
     args = [('name', 'ilike', payment_terms)]
@@ -181,7 +176,6 @@ def search_pmt_terms(sock, uid, payment_terms):
 
 
 def search_incoterm(sock, uid, code):
-
     incoterm_id = ''
 
     args = [('code', 'ilike', code)]
@@ -195,7 +189,6 @@ def search_incoterm(sock, uid, code):
 
 
 def get_sale_name(sock, uid, sale_id):
-
     fields = ['name']
     result = sock.execute(DBNAME, uid, PWD, 'sale.order',
                           'read', sale_id, fields)
@@ -203,7 +196,6 @@ def get_sale_name(sock, uid, sale_id):
 
 
 def search_cust_id(sock, uid, partner_name):
-
     cust_id = ''
 
     args = [('name', 'ilike', partner_name)]
@@ -216,7 +208,6 @@ def search_cust_id(sock, uid, partner_name):
 
 
 def search_channel_id(sock, uid):
-
     channel_id = False
 
     args = [('code', '=', 'edi')]
@@ -229,7 +220,6 @@ def search_channel_id(sock, uid):
 
 
 def search_user_id(sock, uid, user_name):
-
     user_id = ''
 
     args = [('name', 'ilike', user_name)]
@@ -242,7 +232,6 @@ def search_user_id(sock, uid, user_name):
 
 
 def get_shop_location(sock, uid, warehouse_id):
-
     src_location_id = sock.execute(
         DBNAME,
         uid,
@@ -258,7 +247,6 @@ def get_shop_location(sock, uid, warehouse_id):
 
 
 def search_pricelist_id(sock, uid, pricelist):
-
     pricelist_id = ''
 
     args = [('name', '=', pricelist_id)]
@@ -271,7 +259,6 @@ def search_pricelist_id(sock, uid, pricelist):
 
 
 def rename_picking_pol(picking_policy):
-
     pick_pol = 'one'
     if (picking_policy == 'Deliver each product when available'):
         pick_pol = 'direct'
@@ -296,7 +283,6 @@ def rename_order_pol(order_policy):
 
 
 def check_po_number(sock, uid, client_order_ref, partner_id):
-
     result = False
     # If PO number is found in EDI
     if client_order_ref:
@@ -310,11 +296,11 @@ def check_po_number(sock, uid, client_order_ref, partner_id):
                                   '=',
                                   partner_id),
                                  ('state',
-                                    '!=',
-                                    'cancel'),
-                                    ('client_order_ref',
-                                     '=',
-                                     client_order_ref)])
+                                  '!=',
+                                  'cancel'),
+                                 ('client_order_ref',
+                                  '=',
+                                  client_order_ref)])
 
         # if sale_ids from the above search, then po number is duplicated, warn
         # user, and do not input the sale order
@@ -345,7 +331,6 @@ def create_sale_order(
         trading_partner_id,
         ack_bool,
         automatic_workflow_id):
-
     partner_info = get_partner_info(sock, uid, partner_id)
 
     user_id = False
@@ -401,7 +386,6 @@ def create_sale_order(
 
 
 def search_product(sock, uid, product_upc, product_sku):
-
     args = [('default_code', '=', product_sku)]
     ids = sock.execute(DBNAME, uid, PWD, 'product.product', 'search', args)
     try:
@@ -414,7 +398,6 @@ def search_product(sock, uid, product_upc, product_sku):
 
 
 def get_product(sock, uid, product_id):
-
     fields = ['available_sale', 'uom_id',
               'weight', 'standard_price', 'default_code']
     record = sock.execute(
@@ -426,7 +409,6 @@ def get_product(sock, uid, product_id):
 
 
 def rename_order_type(order_type):
-
     order_type_1 = ['from stock', 'on order']
     order_type_2 = ['make_to_stock', 'make_to_order']
     i = 0
@@ -453,7 +435,6 @@ def create_so_lines(
         po_lines,
         config_rec,
         pricelist_id):
-
     sale_line_ids = []
     p_ids = []
     products_not_found = ''
@@ -522,9 +503,9 @@ def create_so_lines(
         else:
 
             print "INFO: ***** FAILURE TO FIND PRODUCT WITH UPC CODE: " + \
-                str(product_code)
+                  str(product_code)
             products_not_found = products_not_found + '\n Line not input: ' + \
-                qty + ' ' + uom + ' of ' + product_code
+                                 qty + ' ' + uom + ' of ' + product_code
 
         if products_not_found:
             sock.execute(DBNAME, uid, PWD, 'sale.order', 'write',
@@ -534,7 +515,6 @@ def create_so_lines(
 
 
 def process_record(sock, uid, record, partner_rec, config_rec):
-
     ack_bool = config_rec['ack_855']
 
     # We're using fullfillment_channel to store Sale Automatic Workflow ID per
@@ -583,7 +563,6 @@ def process_record(sock, uid, record, partner_rec, config_rec):
 
 
 def main(sock, uid, order_dict, in_path):
-
     sale_id = False
     company_id = False
 
