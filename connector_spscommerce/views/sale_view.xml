@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
-    <data> 
+    <data>
 
-	    <!--Reference fields from ASN to Sale to Purchase Req-->
+        <!--Reference fields from ASN to Sale to Purchase Req-->
         <record id="purchase_line_edi_view" model="ir.ui.view">
             <field name="name">purchase.line.edi.view</field>
             <field name="model">purchase.order.line</field>
@@ -10,31 +10,37 @@
             <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="asn_shipment" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                    <field name="po_number" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="asn_shipment"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="po_number"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
                 </field>
             </field>
-        </record>            
-    
-	    <!--checkbox to denote that this was generated from an 850 EDI order-->
+        </record>
+
+        <!--checkbox to denote that this was generated from an 850 EDI order-->
         <record id="so_edi_view" model="ir.ui.view">
             <field name="name">so.edi.view</field>
             <field name="model">sale.order</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-            
+
                 <field name="name" position="after">
-                    <field name="edi_error" style="background-color:red; color:yellow;" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="edi_error"
+                           style="background-color:red; color:yellow;"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
                 </field>
 
                 <xpath expr="/form/sheet/group" position="before">
-                    <div class="oe_right oe_button_box" name="buttons" attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)]}">
-                        <button type="object" string="Send 855" name="action_send_855"/> 
+                    <div class="oe_right oe_button_box" name="buttons"
+                         attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)]}">
+                        <button type="object" string="Send 855"
+                                name="action_send_855"/>
                     </div>
 
                 </xpath>
-                
+
                 <!--xpath expr="/form/sheet/notebook/page/group/group[@name='sales_person']" position="before">
                             <field name="edi_yes"/>
                             <field name="ack_yes" invisible="1"/>
@@ -49,57 +55,78 @@
                             <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
 			    </xpath-->
-                
-                <xpath expr="/form/sheet/notebook/page/group/group[@name='sales_person']" position="before">
+
+                <xpath expr="/form/sheet/notebook/page/group/group[@name='sales_person']"
+                       position="before">
                     <group name='edi_info'>
                         <group>
                             <field name="edi_yes"/>
                             <field name="ack_yes"/>
-                            <field name="asn_shipment" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="ship_to_code" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="asn_shipment"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="ship_to_code"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="supplier_code" invisible="1"/>
-                            <field name="scac_code" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="bol_num" attrs="{'invisible':[('edi_yes','=', False)]}"/>                  
-                            <field name="tracking_num" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="855_sent_timestamp" attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)], 'readonly': '1'}" />
-                            <field name="trading_partner_id" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                            <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="scac_code"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="bol_num"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="tracking_num"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="855_sent_timestamp"
+                                   attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)], 'readonly': '1'}"/>
+                            <field name="trading_partner_id"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="ship_not_before_date"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="cancel_after_date"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
                         </group>
                     </group>
-			    </xpath>
-            <!--/field>
-        </record>
-    
-    	<New order ack fields on sale order lines>
-        <record id="so_line_edi_view" model="ir.ui.view">
-            <field name="name">so.line.edi.view</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">--> 
-                <!-- form -->    
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="after">
-                    <field name="edi_yes" />
-                    <field name="ack_yes" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                    <field name="edi_line_num" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                    <field name="buyer_part_number" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                    <field name="po_number" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                    <field string="EDI PO Qty" name="edi_line_qty" attrs="{'invisible':[('edi_yes','=', False)]}" />                
-                    <field name="edi_est_ship_date" attrs="{'invisible':[('edi_yes','=', False)]}" />
+                </xpath>
+                <!--/field>
+            </record>
+
+            <New order ack fields on sale order lines>
+            <record id="so_line_edi_view" model="ir.ui.view">
+                <field name="name">so.line.edi.view</field>
+                <field name="model">sale.order</field>
+                <field name="inherit_id" ref="sale.view_order_form"/>
+                <field name="arch" type="xml">-->
+                <!-- form -->
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']"
+                       position="after">
+                    <field name="edi_yes"/>
+                    <field name="ack_yes"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="edi_line_num"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="buyer_part_number"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="po_number"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field string="EDI PO Qty" name="edi_line_qty"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="edi_est_ship_date"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="edi_line_msg" invisible="1"/>
-                </xpath>                
-                <!-- tree -->   
-                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="after">               
+                </xpath>
+                <!-- tree -->
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']"
+                       position="after">
                     <field name="edi_yes" invisible="1"/>
                     <field name="ack_yes" invisible="1"/>
-                    <field string="EDI PO Qty" name="edi_line_qty" invisible="1"/>                
-                    <field name="edi_est_ship_date" attrs="{'invisible':[('edi_yes','=', False)]}" />
-                    <field name="edi_line_msg" 
-                        on_change="edi_line_status_change(parent.id,edi_line_msg, parent.cancel_after_date, context)" 
-                        attrs="{'required':[('edi_yes','=',True)],'invisible':[('edi_yes','=', False)]}" invisible="1"/>
+                    <field string="EDI PO Qty" name="edi_line_qty"
+                           invisible="1"/>
+                    <field name="edi_est_ship_date"
+                           attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="edi_line_msg"
+                           on_change="edi_line_status_change(parent.id,edi_line_msg, parent.cancel_after_date, context)"
+                           attrs="{'required':[('edi_yes','=',True)],'invisible':[('edi_yes','=', False)]}"
+                           invisible="1"/>
                 </xpath>
             </field>
         </record>
-       
+
     </data>
 </openerp>

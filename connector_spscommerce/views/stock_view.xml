@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-                
-        <!-- Stock Picking Form -->   
+
+        <!-- Stock Picking Form -->
         <record model="ir.ui.view" id="picking_out_landed_form_view">
             <field name="name">picking.out.landed.form</field>
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_picking_form"/>
             <field name="arch" type="xml">
                 <field name="product_id" position="after">
-                    <field name="package_code"/> 
+                    <field name="package_code"/>
                 </field>
             </field>
         </record>
-        
-        <!-- Stock Picking Tree -->   
+
+        <!-- Stock Picking Tree -->
         <record model="ir.ui.view" id="picking_out_landed_tree_view">
             <field name="name">picking.out.landed.tree</field>
             <field name="model">stock.move</field>
@@ -24,17 +24,18 @@
                     <field name="package_code"/>
                 </field>
             </field>
-        </record>    
-        
-    	<!--Add tracking numbers to package form -->
+        </record>
+
+        <!--Add tracking numbers to package form -->
         <record id="stock_transfer_pack_inherited_view" model="ir.ui.view">
             <field name="name">stock.transfer.pack.view</field>
             <field name="model">stock.pack.operation</field>
-            <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
+            <field name="inherit_id"
+                   ref="stock.view_pack_operation_details_form"/>
             <field name="arch" type="xml">
                 <field name="product_id" position="before">
                     <field name="package_code"/>
-                </field>                    
+                </field>
             </field>
         </record>
 
@@ -45,23 +46,24 @@
             <field name="arch" type="xml">
                 <field name="packaging_id" position="after">
                     <field name="package_code"/>
-                </field>                    
+                </field>
             </field>
         </record>
-    
-    	<!--Add SCAC code to delivery carrier form-->
+
+        <!--Add SCAC code to delivery carrier form-->
         <record id="del_carrier_inherited_view" model="ir.ui.view">
             <field name="name">del.carrier.view</field>
             <field name="model">delivery.carrier</field>
-            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="inherit_id"
+                   ref="delivery.view_delivery_carrier_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="scac_code" string="SCAC Shipping Code"/>
-                </field>                    
+                </field>
             </field>
-        </record>       
+        </record>
 
-     
+
         <!-- Stock Move Changes -->
         <record id="stock_move_edi_view" model="ir.ui.view">
             <field name="name">stock.move.edi.view</field>
@@ -74,7 +76,7 @@
                 </field>
             </field>
         </record>
-        
+
         <!-- Stock Picking Changes -->
         <record id="do_edi_view" model="ir.ui.view">
             <field name="name">do.edi.view</field>
@@ -83,34 +85,47 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/group" position="before">
-                    <div class="oe_right oe_button_box" name="buttons" attrs="{'invisible':[('edi_yes','=', False)]}">
-                        <button type="object" string="Create 856" name="action_create_text_856"/> 
-                   </div>
-                </xpath> 
+                    <div class="oe_right oe_button_box" name="buttons"
+                         attrs="{'invisible':[('edi_yes','=', False)]}">
+                        <button type="object" string="Create 856"
+                                name="action_create_text_856"/>
+                    </div>
+                </xpath>
                 <field name="carrier_id" position="replace">
-                    <field name="carrier_id" attrs="{'required':[('edi_yes','=', True)]}"/>
+                    <field name="carrier_id"
+                           attrs="{'required':[('edi_yes','=', True)]}"/>
                 </field>
                 <field name="carrier_tracking_ref" position="replace">
-                    <field name="carrier_tracking_ref" attrs="{'required':[('edi_yes','=', True)]}"/>
+                    <field name="carrier_tracking_ref"
+                           attrs="{'required':[('edi_yes','=', True)]}"/>
                 </field>
                 <xpath expr="//page[@name='extra']" position="inside">
                     <separator string="EDI Information"/>
-                        <group>
-                            <group name="edi_data">
-                                <field name="edi_yes"/>
-                                <field name="package_code" attrs="{'invisible':[('edi_yes','=', False)]}"/>                                
-                                <field name="bol_num" attrs="{'invisible':[('edi_yes','=', False)], 'required':[('edi_yes','=', True)]}"/>
-                                <field name="ship_to_code" attrs="{'invisible':[('edi_yes','=', False)]}"/>                   
-                                <field name="est_del_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                                <field name="856_sent_timestamp" readonly = "1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                                <field name="trading_partner_id" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                                <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                                <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/> 
-                                </group>
-                        </group>                          
+                    <group>
+                        <group name="edi_data">
+                            <field name="edi_yes"/>
+                            <field name="package_code"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="bol_num"
+                                   attrs="{'invisible':[('edi_yes','=', False)], 'required':[('edi_yes','=', True)]}"/>
+                            <field name="ship_to_code"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="est_del_date"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="856_sent_timestamp" readonly="1"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="trading_partner_id"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="ship_not_before_date"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                            <field name="cancel_after_date"
+                                   attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                        </group>
+                    </group>
                 </xpath>
-                <xpath expr="//sheet//notebook//page//field[@name='pack_operation_product_ids']//tree//field[@name='product_id']" position="after">
-                    <field name="package_code"/>                   
+                <xpath expr="//sheet//notebook//page//field[@name='pack_operation_product_ids']//tree//field[@name='product_id']"
+                       position="after">
+                    <field name="package_code"/>
                 </xpath>
                 <!--field name="origin" position="after">
                     <field name="bol_num"/>
@@ -124,13 +139,15 @@
                 </field-->
             </field>
         </record>
-        
+
         <!-- action for writing 856 -->
         <record id="write_edi_856" model="ir.actions.server">
             <field name="name">Create 856</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="state">code</field>
-            <field name="code">self.action_create_text_856(cr, uid, context.get('active_ids', []), context=context)</field>
+            <field name="code">self.action_create_text_856(cr, uid,
+                context.get('active_ids', []), context=context)
+            </field>
             <field name="condition">True</field>
         </record>
 
@@ -142,6 +159,6 @@
             <field eval="'ir.actions.server,%d'%write_edi_856" name="value"/>
             <field eval="True" name="object"/>
         </record>
-	
+
     </data>
 </openerp>

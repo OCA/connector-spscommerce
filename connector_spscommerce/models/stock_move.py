@@ -6,7 +6,7 @@ from openerp import api, fields, models
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    
+
     asn_shipment = fields.Char('ASN Shipment Number from 856')
     po_number = fields.Char('Line Item PO Number from 856')
     edi_line_num = fields.Integer('EDI PO line number')
@@ -31,13 +31,13 @@ class StockMove(models.Model):
                                     'Package Code',
                                     help="Pkg Code Qualifier.",
                                     default="PLT71")
-    
+
     @api.cr_uid_ids_context
-    def _picking_assign(self, cr, uid, move_ids, context=None): 
-        result = super(StockMove, self).\
+    def _picking_assign(self, cr, uid, move_ids, context=None):
+        result = super(StockMove, self). \
             _picking_assign(cr, uid, move_ids, context=context)
         pick_ids = {}
-        
+
         for move in self.browse(cr, uid, move_ids, context=context):
             picking = move.picking_id
             if not picking or pick_ids.get(picking.id, False):
@@ -47,15 +47,15 @@ class StockMove(models.Model):
             if edi_yes:
                 res = {}
                 res['trading_partner_id'] = \
-                    move.procurement_id.trading_partner_id and\
+                    move.procurement_id.trading_partner_id and \
                     move.procurement_id.trading_partner_id.id or False
-                res['edi_yes'] = move.procurement_id.trading_partner_id\
+                res['edi_yes'] = move.procurement_id.trading_partner_id \
                                  and edi_yes or False
                 res['ship_not_before_date'] = \
-                    move.procurement_id.trading_partner_id and\
+                    move.procurement_id.trading_partner_id and \
                     move.procurement_id.ship_not_before_date or False
                 res['cancel_after_date'] = \
-                    move.procurement_id.trading_partner_id and\
+                    move.procurement_id.trading_partner_id and \
                     move.procurement_id.cancel_after_date or False
                 picking.write(res)
         return result
