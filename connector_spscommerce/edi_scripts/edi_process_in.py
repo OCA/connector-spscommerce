@@ -323,7 +323,7 @@ def parse_csv(sock, uid, file):
         record['edi_error'] = False
         record['edi_yes'] = False
         record['ack_yes'] = True
-        record['855_replace'] = True
+        record['replace_855'] = True
         record['supplier_code'] = '123'
         record['ship_not_before_date'] = datetime.now().strftime('%Y-%m-%d')
         record['cancel_after_date'] = datetime.now().strftime('%Y-%m-%d')

@@ -50,7 +50,7 @@
                             <field name="scac_code" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="bol_num" attrs="{'invisible':[('edi_yes','=', False)]}"/>                  
                             <field name="tracking_num" attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="855_sent_timestamp" attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)], 'readonly': '1'}" />
+                            <field name="sent_timestamp_855" attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)], 'readonly': '1'}" />
                             <field name="trading_partner_id" attrs="{'invisible':[('edi_yes','=', False)], 'readonly': '1'}" />
                             <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
@@ -73,7 +73,7 @@
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="tracking_num"
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="855_sent_timestamp"
+                            <field name="sent_timestamp_855"
                                    attrs="{'invisible':['|',('ack_yes','=', False),('edi_yes','=', False)], 'readonly': '1'}"/>
                             <field name="trading_partner_id"
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>

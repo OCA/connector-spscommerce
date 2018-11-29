@@ -26,7 +26,7 @@
                                 <field name="asn_shipment"/>
                                 <field name="invoice_check" invisible="1"/>
                                 <field name="edi_yes" invisible="1"/>
-                                <field name="810_sent_timestamp" readonly="1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                                <field name="sent_timestamp_810" readonly="1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                                 <field name="trading_partner_id" readonly = "1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                                 <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                                 <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
@@ -49,7 +49,7 @@
                     <field name="asn_shipment"
                            attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="invoice_check" invisible="1"/>
-                    <field name="810_sent_timestamp" readonly="1"
+                    <field name="sent_timestamp_810" readonly="1"
                            attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="trading_partner_id" readonly="1"
                            attrs="{'invisible':[('edi_yes','=', False)]}"/>

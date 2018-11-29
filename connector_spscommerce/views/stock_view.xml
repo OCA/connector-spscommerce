@@ -112,7 +112,7 @@
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="est_del_date"
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
-                            <field name="856_sent_timestamp" readonly="1"
+                            <field name="sent_timestamp_856" readonly="1"
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
                             <field name="trading_partner_id"
                                    attrs="{'invisible':[('edi_yes','=', False)]}"/>
@@ -132,7 +132,7 @@
                     <field name="ship_to_code" />
                     <field name="est_del_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="edi_yes" invisible="1"/>
-                    <field name="856_sent_timestamp" readonly = "1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
+                    <field name="sent_timestamp_856" readonly = "1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="trading_partner_id" readonly = "1" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="ship_not_before_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>
                     <field name="cancel_after_date" attrs="{'invisible':[('edi_yes','=', False)]}"/>                

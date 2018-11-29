@@ -19,8 +19,7 @@ class SaleOrder(models.Model):
     edi_yes = fields.Boolean('From an EDI PO?',
                              help="Is this order from an EDI purchase order, 850 EDI doc.")
     ack_yes = fields.Boolean('855', help="Will this order have an 855?")
-    855
-    _replace = fields.Boolean('Send 855', readonly=True,
+    replace_855 = fields.Boolean('Send 855', readonly=True,
                               help="Shall we send an 855 replacement?")
     ship_to_code = fields.Char('Ship To Warehouse',
                                help="Trading Partner Ship to location code.")
@@ -32,11 +31,9 @@ class SaleOrder(models.Model):
                                     help="Cancel if Shipped After This Date.")
     trading_partner_id = fields.Many2one('edi.config', 'Trading Partner',
                                          help='EDI Configuration information for partner')
-    855
-    _sent_timestamp = fields.Datetime('855 Sent Date',
+    sent_timestamp_855 = fields.Datetime('855 Sent Date',
                                       help="The timestamp for when the 855 was sent.")
-    855
-    _check = fields.Boolean('855 Sent Already',
+    check_855 = fields.Boolean('855 Sent Already',
                             help="A check to see if 855 has been sent already.")
     scac_code = fields.Char('SCAC Code',
                             help="This is the shipping alpha code from your carrier.")
@@ -519,7 +516,7 @@ class SaleOrder(models.Model):
             date_format = "%Y-%m-%d %H:%M:%S"
             now = datetime.now()
             today = now.strftime(date_format)
-            sale_obj.write({'855_check': True, '855_sent_timestamp': today})
+            sale_obj.write({'check_855': True, 'sent_timestamp_855': today})
             print "*****  SUCCESSFULLY STORED  *****"
 
             xml_output += '</OrderAck></OrderAcks>'
@@ -535,10 +532,10 @@ class SaleOrder(models.Model):
 
     def _create_855_wrapper(self, cr, uid, context=None):
 
-        # search for invoices that are ack_yes = True, edi_yes = True and 855_sent_timestamp = False
+        # search for invoices that are ack_yes = True, edi_yes = True and sent_timestamp_855 = False
         eligible_orders = self.search(cr, uid, [('ack_yes', '=', True),
                                                 ('edi_yes', '=', True), (
-                                                    '855_sent_timestamp', '=',
+                                                    'sent_timestamp_855', '=',
                                                     False)], context=context)
 
         return eligible_orders and self.create_855(cr, uid, eligible_orders,

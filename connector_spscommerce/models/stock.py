@@ -117,11 +117,9 @@ class stock_picking(models.Model):
                                help="Calculated based on shipping method.")
     trading_partner_id = fields.Many2one('edi.config', 'Trading Partner',
                                          help='EDI Configuration information for partner')
-    856
-    _sent_timestamp = fields.Datetime('856 Sent Date',
+    sent_timestamp_856 = fields.Datetime('856 Sent Date',
                                       help="The timestamp for when the 856 was sent.")
-    856
-    _check = fields.Boolean('856 Created',
+    check_856 = fields.Boolean('856 Created',
                             help="A check to see if 856 has been sent.")
     bol_num = fields.Char('BoL', help="BoL Number.")
     tracking_number = fields.Char('Tracking Number',
@@ -721,7 +719,7 @@ class stock_picking(models.Model):
             shipment_dict.get('Shipment').update(summary_dict)
             # update invoice
             today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            picking.write({'856_sent_timestamp': today})
+            picking.write({'sent_timestamp_856': today})
             shipments_list.get('Shipments').append(shipment_dict)
             processed += 1
 
@@ -741,9 +739,9 @@ class stock_picking(models.Model):
 
     def _create_856_wrapper(self, cr, uid, context=None):
 
-        # search for invoices that are edi_yes = True and 856_sent_timestamp = False
+        # search for invoices that are edi_yes = True and sent_timestamp_856 = False
         eligible_pickings = self.search(cr, uid, [('edi_yes', '=', True), (
-            '856_sent_timestamp', '=', False)], context=context)
+            'sent_timestamp_856', '=', False)], context=context)
         return eligible_pickings and self.create_text_856(cr, uid,
                                                           eligible_pickings,
                                                           context=context) or False

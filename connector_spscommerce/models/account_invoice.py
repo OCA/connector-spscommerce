@@ -87,8 +87,7 @@ class account_invoice(models.Model):
                                 help="This is the date from the 856.")
     edi_yes = fields.Boolean('From an EDI PO?', readonly=True,
                              help="Is this order from an EDI purchase order, 850 EDI doc.")
-    810
-    _sent_timestamp = fields.Datetime('810 Sent Date',
+    sent_timestamp_810 = fields.Datetime('810 Sent Date',
                                       help="The timestamp for when the 856 was sent.")
     trading_partner_id = fields.Many2one('edi.config', 'Trading Partner',
                                          help='EDI Configuration information for partner')
@@ -427,7 +426,7 @@ class account_invoice(models.Model):
             invoice_dict.get('Invoice').update(summary_dict)
             # update invoice
             today = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            invoice.write({'810_sent_timestamp': today})
+            invoice.write({'sent_timestamp_810': today})
             invoices_list.get('Invoices').append(invoice_dict)
             processed += 1
         # Convert dictionary to xml
@@ -445,9 +444,9 @@ class account_invoice(models.Model):
         return processed
 
     def _create_810_wrapper(self, cr, uid, context=None):
-        # search for invoices that are edi_yes = True and 810_sent_timestamp = False.
+        # search for invoices that are edi_yes = True and sent_timestamp_810 = False.
         eligible_invoices = self.search(cr, uid, [('edi_yes', '=', True), (
-            '810_sent_timestamp', '=', False)], context=context)
+            'sent_timestamp_810', '=', False)], context=context)
         return eligible_invoices and self.create_text_810(cr, uid,
                                                           eligible_invoices,
                                                           context=context) or False
