@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 
 import dicttoxml
-from openerp import api, models, fields
+from openerp import models, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, \
     DEFAULT_SERVER_DATE_FORMAT
 
@@ -16,51 +16,51 @@ class product_pricelist(models.Model):
     def price_get_wrapper(self, cr, uid, ids, prod_id, qty, partner=None,
                           context=None):
         price = \
-        self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner,
-                            context=context)[ids][0]
+            self.price_rule_get(cr, uid, ids, prod_id, qty, partner=partner,
+                                context=context)[ids][0]
         return price
 
 
 class stock_pack_operation(models.Model):
     _inherit = "stock.pack.operation"
 
-    tracking_number= fields.Char('Tracking Number',
-                                   help="Tracking Number")
-    bol= fields.Char('Bill of Lading Number',
-                       help="Bill of Lading Number")
-    package_code= fields.Selection(
+    tracking_number = fields.Char('Tracking Number',
+                                  help="Tracking Number")
+    bol = fields.Char('Bill of Lading Number',
+                      help="Bill of Lading Number")
+    package_code = fields.Selection(
         (('PLT71', 'PLT71'), ('CTN25', 'CTN25')), 'Package Code',
         help="Pkg Code Qualifier.", default="PLT71")
-    po_number= fields.Char('PO Number from EDI 850',
-                             help="PO Number from EDI 850.")
-    edi_line_num= fields.Char('Line Number from EDI 850',
-                                help="Line Number from EDI 850.")
-    reference_qual= fields.Char('ReferenceQual',
-                                  help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
-    reference_id= fields.Char('ReferenceID',
-                                help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
-    ref_description= fields.Char('Description',
-                                   help="Free-form textual description to clarify the related data elements and their content.")
-    note_code= fields.Char('NoteCode',
-                             help="Code specifying the type of note.")
-    note_information_field= fields.Char('NoteInformationField',
-                                          help="Free-form textual description of the note.")
-    pack_qualifier= fields.Char('PackQualifier', help="")
-    pack_value= fields.Char('PackValue', help="")
-    pack_size= fields.Char('PackSize', help="")
-    pack_uom= fields.Char('PackUOM', help="")
-    packing_medium= fields.Char('PackingMedium', help="")
-    packing_material= fields.Char('PackingMaterial', help="")
+    po_number = fields.Char('PO Number from EDI 850',
+                            help="PO Number from EDI 850.")
+    edi_line_num = fields.Char('Line Number from EDI 850',
+                               help="Line Number from EDI 850.")
+    reference_qual = fields.Char('ReferenceQual',
+                                 help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
+    reference_id = fields.Char('ReferenceID',
+                               help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
+    ref_description = fields.Char('Description',
+                                  help="Free-form textual description to clarify the related data elements and their content.")
+    note_code = fields.Char('NoteCode',
+                            help="Code specifying the type of note.")
+    note_information_field = fields.Char('NoteInformationField',
+                                         help="Free-form textual description of the note.")
+    pack_qualifier = fields.Char('PackQualifier', help="")
+    pack_value = fields.Char('PackValue', help="")
+    pack_size = fields.Char('PackSize', help="")
+    pack_uom = fields.Char('PackUOM', help="")
+    packing_medium = fields.Char('PackingMedium', help="")
+    packing_material = fields.Char('PackingMaterial', help="")
 
 
 class stock_quant(models.Model):
     _inherit = "stock.quant"
 
-    tracking_number= fields.Char('Tracking Number',
-                                   help="Tracking Number")
-    bol= fields.Char('Bill of Lading Number',
-                       help="Bill of Lading Number")
-    package_code= fields.Selection(
+    tracking_number = fields.Char('Tracking Number',
+                                  help="Tracking Number")
+    bol = fields.Char('Bill of Lading Number',
+                      help="Bill of Lading Number")
+    package_code = fields.Selection(
         (('PLT71', 'PLT71'), ('CTN25', 'CTN25')), 'Package Code',
         help="Pkg Code Qualifier.", default="PLT71")
 
@@ -68,11 +68,11 @@ class stock_quant(models.Model):
 class stock_quant_package(models.Model):
     _inherit = "stock.quant.package"
 
-    tracking_number= fields.Char('Tracking Number',
-                                   help="Tracking Number")
-    bol= fields.Char('Bill of Lading Number',
-                       help="Bill of Lading Number")
-    package_code= fields.Selection(
+    tracking_number = fields.Char('Tracking Number',
+                                  help="Tracking Number")
+    bol = fields.Char('Bill of Lading Number',
+                      help="Bill of Lading Number")
+    package_code = fields.Selection(
         (('PLT71', 'PLT71'), ('CTN25', 'CTN25')), 'Package Code',
         help="Pkg Code Qualifier.", default="PLT71")
 
@@ -80,147 +80,149 @@ class stock_quant_package(models.Model):
 class delivery_carrier(models.Model):
     _inherit = "delivery.carrier"
 
-    scac_code= fields.Char('SCAC Ship Method Code',
-                             help="Shipping carrier code.")
+    scac_code = fields.Char('SCAC Ship Method Code',
+                            help="Shipping carrier code.")
 
 
 class stock_move(models.Model):
     _inherit = "stock.move"
 
-    product_material_description= fields.Char(
+    product_material_description = fields.Char(
         'ProductMaterialDescription', help="ProductMaterialDescription")
-    consumer_package_code= fields.Char('ConsumerPackageCode',
-                                         help="ConsumerPackageCode")
-    gtin= fields.Char('GTIN', help="GTIN")
-    upc_case_code= fields.Char('UPCCaseCode', help="UPCCaseCode")
-    natl_drug_code= fields.Char('NatlDrugCode', help="NatlDrugCode")
-    international_standard_book_number= fields.Char(
+    consumer_package_code = fields.Char('ConsumerPackageCode',
+                                        help="ConsumerPackageCode")
+    gtin = fields.Char('GTIN', help="GTIN")
+    upc_case_code = fields.Char('UPCCaseCode', help="UPCCaseCode")
+    natl_drug_code = fields.Char('NatlDrugCode', help="NatlDrugCode")
+    international_standard_book_number = fields.Char(
         'InternationalStandardBookNumber',
         help="InternationalStandardBookNumber")
-    product_size_description= fields.Char('ProductSizeDescription',
-                                            help="ProductSizeDescription")
-    product_color_description= fields.Char('ProductColorDescription',
-                                             help="ProductColorDescription")
+    product_size_description = fields.Char('ProductSizeDescription',
+                                           help="ProductSizeDescription")
+    product_color_description = fields.Char('ProductColorDescription',
+                                            help="ProductColorDescription")
 
 
 class stock_picking(models.Model):
     _inherit = "stock.picking"
 
-    ship_not_before_date= fields.Date('Do Not Ship Before This Date',
-                                        help="Do Not Ship Before This Date.")
-    cancel_after_date= fields.Date('Cancel if Shipped After This Date',
-                                     help="Cancel if Shipped After This Date.")
-    client_order_ref= fields.Text('Customer PO #', help="Customer PO #")
-    edi_yes= fields.Boolean('From an EDI PO', readonly=True,
-                              help="Is this order from an EDI purchase order, 850 EDI doc.")
-    est_del_date= fields.Date('Estimated Delivery Date',
-                                help="Calculated based on shipping method.")
-    trading_partner_id= fields.Many2one('edi.config', 'Trading Partner',
-                                          help='EDI Configuration information for partner')
-    856_sent_timestamp= fields.Datetime('856 Sent Date',
-                                          help="The timestamp for when the 856 was sent.")
-    856_check= fields.Boolean('856 Created',
-                                help="A check to see if 856 has been sent.")
-    bol_num= fields.Char('BoL', help="BoL Number.")
-    tracking_number= fields.Char('Tracking Number',
-                                   help="Tracking Number")
-    ship_to_code= fields.Char('Ship To Warehouse',
-                                help="Trading Partner Ship to location code.")
-    package_code= fields.Selection(
+    ship_not_before_date = fields.Date('Do Not Ship Before This Date',
+                                       help="Do Not Ship Before This Date.")
+    cancel_after_date = fields.Date('Cancel if Shipped After This Date',
+                                    help="Cancel if Shipped After This Date.")
+    client_order_ref = fields.Text('Customer PO #', help="Customer PO #")
+    edi_yes = fields.Boolean('From an EDI PO', readonly=True,
+                             help="Is this order from an EDI purchase order, 850 EDI doc.")
+    est_del_date = fields.Date('Estimated Delivery Date',
+                               help="Calculated based on shipping method.")
+    trading_partner_id = fields.Many2one('edi.config', 'Trading Partner',
+                                         help='EDI Configuration information for partner')
+    856
+    _sent_timestamp = fields.Datetime('856 Sent Date',
+                                      help="The timestamp for when the 856 was sent.")
+    856
+    _check = fields.Boolean('856 Created',
+                            help="A check to see if 856 has been sent.")
+    bol_num = fields.Char('BoL', help="BoL Number.")
+    tracking_number = fields.Char('Tracking Number',
+                                  help="Tracking Number")
+    ship_to_code = fields.Char('Ship To Warehouse',
+                               help="Trading Partner Ship to location code.")
+    package_code = fields.Selection(
         (('PLT71', 'PLT71'), ('CTN25', 'CTN25')), 'Package Code',
         help="Pkg Code Qualifier.", default="PLT71")
-    tset_purpose_code= fields.Char('TsetPurposeCode',
-                                     help="Code identifying purpose of the document..")
-    purchase_order_type_code= fields.Char('PurchaseOrderTypeCode',
-                                            help="Code specifying the type of purchase order.")
-    po_type_description= fields.Char('POTypeDescription',
-                                       help="Free form text to describe the type of order.")
-    ship_complete_code= fields.Char('ShipCompleteCode',
-                                      help="Code to identify a specific requirement or agreement of sale. Should only be used to indicate if an item can be placed on backorder.")
-    department= fields.Char('Department',
-                              help="Name or number identifying an area wherein merchandise is categorized within a store.")
-    division= fields.Char('Division',
-                            help="Different entities belonging to the same parent company.")
-    promotion_deal_number= fields.Char('PromotionDealNumber',
-                                         help="Number uniquely identifying an agreement for a special offer or price.")
-    terms_type= fields.Char('TermsType',
-                              help="Code identifying type of payment terms.")
-    terms_basis_date_code= fields.Char('TermsBasisDateCode',
-                                         help="Code identifying the beginning of the terms period.")
-    terms_discount_percentage= fields.Char('TermsDiscountPercentage',
-                                             help="Terms discount percentage available to the purchaser")
-    terms_discount_due_days= fields.Char('TermsDiscountDueDays',
-                                           help="Number of days by which payment or invoice must be received in order to receive the discount noted.")
-    terms_net_due_days= fields.Char('TermsNetDueDays',
-                                      help="Number of days until total invoice amount is due[discount not applicable.")
-    payment_method_code= fields.Char('PaymentMethodCode',
-                                       help="Indication of the instrument of payment.")
-    fob_pay_code= fields.Char('FOBPayCode',
-                                help="Code identifying payment terms for transportation charges.")
-    fob_location_qualifier= fields.Char('FOBLocationQualifier',
-                                          help="Code identifying type of location at which ownership of goods is transferred.")
-    fob_location_description= fields.Char('FOBLocationDescription',
-                                            help="Free-form textual description of the location at which ownership of goods is transferred.")
-    fob_title_passage_code= fields.Char('FOBTitlePassageCode',
-                                          help="Code describing the location of ownership of the goods.")
-    fob_title_passage_location= fields.Char('FOBTitlePassageLocation',
-                                              help="Location of ownership of the goods.")
-    carrier_trans_method_code= fields.Char('CarrierTransMethodCode',
-                                             help="Code specifying the method or type of transportation for the shipment.")
-    carrier_alpha_code= fields.Char('CarrierAlphaCode',
-                                      help="Standard Carrier Alpha Code[SCAC] - ")
-    carrier_routing= fields.Char('CarrierRouting',
-                                   help="Free-form description of the routing/requested routing for shipment or the originating carrier's identity.")
-    routing_sequence_code= fields.Char('RoutingSequenceCode', help="")
-    service_level_code= fields.Char('ServiceLevelCode',
-                                      help="Code indicating the level of transportation service or the billing service offered by the transportation carrier.")
-    reference_qual= fields.Char('ReferenceQual',
-                                  help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
-    reference_id= fields.Char('ReferenceID',
-                                help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
-    ref_description= fields.Char('Description',
-                                   help="Free-form textual description to clarify the related data elements and their content.")
-    note_code= fields.Char('NoteCode',
-                             help="Code specifying the type of note.")
-    note_information_field= fields.Char('NoteInformationField',
-                                          help="Free-form textual description of the note.")
-    allow_chrg_indicator= fields.Char('AllowChrgIndicator',
-                                        help="Code which indicates an allowance or charge for the service specified.")
-    allow_chrg_code= fields.Char('AllowChrgCode',
-                                   help="Code describing the type of allowance or charge for the service specified.")
-    allow_chrg_agency_code= fields.Char('AllowChrgAgencyCode',
-                                          help="Code identifying the agency assigning the code values.")
-    allow_chrg_agency= fields.Char('AllowChrgAgency',
-                                     help="Agency maintained code identifying the service, promotion, allowance, or charge.")
-    allow_chrg_amt= fields.Float('AllowChrgAmt',
-                                   help="Amount of the allowance or charge.")
-    allow_chrg_percent_qual= fields.Char('AllowChrgPercentQual',
-                                           help="Code indicating on what basis an allowance or charge percent is calculated..")
-    allow_chrg_percent= fields.Float('AllowChrgPercent',
-                                       help="Percentage of allowance or charge. Percentages should be represented as real numbers[0% through 100% should be normalized to 0.0 through 100.00]..")
-    allow_chrg_handling_code= fields.Char('AllowChrgHandlingCode',
-                                            help="Code indicating method of handling for an allowance or charge..")
-    reference_identification= fields.Char('ReferenceIdentification',
-                                            help="")
-    allow_chrg_handling_description= fields.Char(
+    tset_purpose_code = fields.Char('TsetPurposeCode',
+                                    help="Code identifying purpose of the document..")
+    purchase_order_type_code = fields.Char('PurchaseOrderTypeCode',
+                                           help="Code specifying the type of purchase order.")
+    po_type_description = fields.Char('POTypeDescription',
+                                      help="Free form text to describe the type of order.")
+    ship_complete_code = fields.Char('ShipCompleteCode',
+                                     help="Code to identify a specific requirement or agreement of sale. Should only be used to indicate if an item can be placed on backorder.")
+    department = fields.Char('Department',
+                             help="Name or number identifying an area wherein merchandise is categorized within a store.")
+    division = fields.Char('Division',
+                           help="Different entities belonging to the same parent company.")
+    promotion_deal_number = fields.Char('PromotionDealNumber',
+                                        help="Number uniquely identifying an agreement for a special offer or price.")
+    terms_type = fields.Char('TermsType',
+                             help="Code identifying type of payment terms.")
+    terms_basis_date_code = fields.Char('TermsBasisDateCode',
+                                        help="Code identifying the beginning of the terms period.")
+    terms_discount_percentage = fields.Char('TermsDiscountPercentage',
+                                            help="Terms discount percentage available to the purchaser")
+    terms_discount_due_days = fields.Char('TermsDiscountDueDays',
+                                          help="Number of days by which payment or invoice must be received in order to receive the discount noted.")
+    terms_net_due_days = fields.Char('TermsNetDueDays',
+                                     help="Number of days until total invoice amount is due[discount not applicable.")
+    payment_method_code = fields.Char('PaymentMethodCode',
+                                      help="Indication of the instrument of payment.")
+    fob_pay_code = fields.Char('FOBPayCode',
+                               help="Code identifying payment terms for transportation charges.")
+    fob_location_qualifier = fields.Char('FOBLocationQualifier',
+                                         help="Code identifying type of location at which ownership of goods is transferred.")
+    fob_location_description = fields.Char('FOBLocationDescription',
+                                           help="Free-form textual description of the location at which ownership of goods is transferred.")
+    fob_title_passage_code = fields.Char('FOBTitlePassageCode',
+                                         help="Code describing the location of ownership of the goods.")
+    fob_title_passage_location = fields.Char('FOBTitlePassageLocation',
+                                             help="Location of ownership of the goods.")
+    carrier_trans_method_code = fields.Char('CarrierTransMethodCode',
+                                            help="Code specifying the method or type of transportation for the shipment.")
+    carrier_alpha_code = fields.Char('CarrierAlphaCode',
+                                     help="Standard Carrier Alpha Code[SCAC] - ")
+    carrier_routing = fields.Char('CarrierRouting',
+                                  help="Free-form description of the routing/requested routing for shipment or the originating carrier's identity.")
+    routing_sequence_code = fields.Char('RoutingSequenceCode', help="")
+    service_level_code = fields.Char('ServiceLevelCode',
+                                     help="Code indicating the level of transportation service or the billing service offered by the transportation carrier.")
+    reference_qual = fields.Char('ReferenceQual',
+                                 help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
+    reference_id = fields.Char('ReferenceID',
+                               help="Code specifying the type of data in the ReferenceID/ReferenceDescription.")
+    ref_description = fields.Char('Description',
+                                  help="Free-form textual description to clarify the related data elements and their content.")
+    note_code = fields.Char('NoteCode',
+                            help="Code specifying the type of note.")
+    note_information_field = fields.Char('NoteInformationField',
+                                         help="Free-form textual description of the note.")
+    allow_chrg_indicator = fields.Char('AllowChrgIndicator',
+                                       help="Code which indicates an allowance or charge for the service specified.")
+    allow_chrg_code = fields.Char('AllowChrgCode',
+                                  help="Code describing the type of allowance or charge for the service specified.")
+    allow_chrg_agency_code = fields.Char('AllowChrgAgencyCode',
+                                         help="Code identifying the agency assigning the code values.")
+    allow_chrg_agency = fields.Char('AllowChrgAgency',
+                                    help="Agency maintained code identifying the service, promotion, allowance, or charge.")
+    allow_chrg_amt = fields.Float('AllowChrgAmt',
+                                  help="Amount of the allowance or charge.")
+    allow_chrg_percent_qual = fields.Char('AllowChrgPercentQual',
+                                          help="Code indicating on what basis an allowance or charge percent is calculated..")
+    allow_chrg_percent = fields.Float('AllowChrgPercent',
+                                      help="Percentage of allowance or charge. Percentages should be represented as real numbers[0% through 100% should be normalized to 0.0 through 100.00]..")
+    allow_chrg_handling_code = fields.Char('AllowChrgHandlingCode',
+                                           help="Code indicating method of handling for an allowance or charge..")
+    reference_identification = fields.Char('ReferenceIdentification',
+                                           help="")
+    allow_chrg_handling_description = fields.Char(
         'AllowChrgHandlingDescription',
         help="Free-form textual description of the note.")
-    appointment_number= fields.Char('AppointmentNumber', help="")
-    asn_structure_code= fields.Char('ASNStructureCode', help="")
-    address_type_code= fields.Char('AddressTypeCode', help="")
-    location_code_qualifier= fields.Char('LocationCodeQualifier',
-                                           help="")
-    address_location_number= fields.Char('AddressLocationNumber',
-                                           help="")
-    status_code= fields.Char('StatusCode', help="")
-    equipment_description_code= fields.Char('EquipmentDescriptionCode',
-                                              help="")
-    carrier_equipment_initial= fields.Char('CarrierEquipmentInitial',
+    appointment_number = fields.Char('AppointmentNumber', help="")
+    asn_structure_code = fields.Char('ASNStructureCode', help="")
+    address_type_code = fields.Char('AddressTypeCode', help="")
+    location_code_qualifier = fields.Char('LocationCodeQualifier',
+                                          help="")
+    address_location_number = fields.Char('AddressLocationNumber',
+                                          help="")
+    status_code = fields.Char('StatusCode', help="")
+    equipment_description_code = fields.Char('EquipmentDescriptionCode',
                                              help="")
-    carrier_equipment_number= fields.Char('CarrierEquipmentNumber',
+    carrier_equipment_initial = fields.Char('CarrierEquipmentInitial',
                                             help="")
-    seal_number= fields.Char('SealNumber', help="")
-    allow_chrg_rate= fields.Char('AllowChrgRate', help="")
+    carrier_equipment_number = fields.Char('CarrierEquipmentNumber',
+                                           help="")
+    seal_number = fields.Char('SealNumber', help="")
+    allow_chrg_rate = fields.Char('AllowChrgRate', help="")
 
     def put_in_pack(self, cr, uid, ids, context=None):
 
@@ -741,7 +743,7 @@ class stock_picking(models.Model):
 
         # search for invoices that are edi_yes = True and 856_sent_timestamp = False
         eligible_pickings = self.search(cr, uid, [('edi_yes', '=', True), (
-        '856_sent_timestamp', '=', False)], context=context)
+            '856_sent_timestamp', '=', False)], context=context)
         return eligible_pickings and self.create_text_856(cr, uid,
                                                           eligible_pickings,
                                                           context=context) or False
