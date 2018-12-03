@@ -54,11 +54,11 @@ def parse_csv(file):
 
         if count == 1 and row[0] != 'H':
 
-            print """INFO: ***** FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED
+            print("""INFO: ***** FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED
              FIRST ROW WITH COLUMN HEADINGS:
               EDI Loop  | Order line | Partner | PO # | Date/UPC |
               code?/product desc | quantity | UOM	Price *****
-              """
+              """)
             break
 
         if count > 2 and row[0] == '':

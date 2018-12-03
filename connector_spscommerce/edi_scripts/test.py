@@ -18,7 +18,7 @@ def connect_oerp():
     sock_common = xmlrpclib.ServerProxy(ERP_WWW + '/xmlrpc/common')
     uid = sock_common.login(DBNAME, USERNAME, PWD)
 
-    print "XMLRPC Connection: SUCCESS - SERVER HAS AUTHENTICATED A LOGIN"
+    print("XMLRPC Connection: SUCCESS - SERVER HAS AUTHENTICATED A LOGIN")
 
     return sock, uid
 
@@ -67,10 +67,10 @@ def connect_oerp():
 
         if count == 1 and row[0] != 'H':
 
-            print "INFO: FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED FIRST" \
-                  " ROW WITH COLUMN HEADINGS:" \
-                  " EDI Loop  | Order line | Partner | PO # | Date/UPC |" \
-                  " code?/product desc | quantity | UOM	Price *****"
+            print("""INFO: FAILURE - YOUR FILE DOES NOT HAVE THE REQUIRED
+            FIRST ROW WITH COLUMN HEADINGS: EDI Loop  | Order line | Partner |
+            PO # | Date/UPC | code?/product desc | quantity | UOM
+            Price *****""")
             break
 
         if count > 2 and row[0] == '':
@@ -80,7 +80,7 @@ def connect_oerp():
         if row[0] == 'H':
 
             if record['sku']:
-                print record
+                print(record)
                 edi_850.main(sock, uid, record, IN_PATH)
                 record['sku'] = []
                 record['upc'] = []
@@ -136,10 +136,10 @@ def main():
     sock, uid = connect_oerp()
     o_id = 33382
     orders = sock.execute(DBNAME, uid, PWD, 'stock.picking', 'read', o_id)
-    print orders
+    print(orders)
 
 
 if __name__ == '__main__':
-    print 'Process: EDI Orders Read - Starting'
+    print('Process: EDI Orders Read - Starting')
     main()
-    print 'Process: EDI Orders Read - Ending'
+    print('Process: EDI Orders Read - Ending')

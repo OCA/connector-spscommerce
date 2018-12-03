@@ -62,7 +62,7 @@ def edi_config_id(
         edi = ids[0]
 
     except Exception:
-        print "There are no trading partners to process"
+        print("There are no trading partners to process")
         pass
 
     return edi
@@ -89,8 +89,8 @@ def get_config(sock, uid, edi):
         rec = record['archive_path']
         return record
     except Exception:
-        print "There are no trading partners to process, paths not set or EOL" \
-              " marker not defined."
+        print("""There are no trading partners to process, paths not set or
+        EOL marker not defined.""")
         pass
 
 
@@ -252,7 +252,7 @@ def get_shop_location(sock, uid, warehouse_id):
         warehouse_id,
         ['lot_stock_id'])
 
-    print 'shop stock loc: ' + str(src_location_id)
+    print('shop stock loc: ' + str(src_location_id))
 
     return src_location_id
 
@@ -291,8 +291,8 @@ def rename_order_pol(order_policy):
     if order_pol:
         return order_pol
     else:
-        print "FAILURE - ORDER POLICY MUST BE: On Demand, On Delivery Order," \
-              " OR Before Delivery"
+        print("""FAILURE - ORDER POLICY MUST BE: On Demand, On Delivery Order,
+        OR Before Delivery""")
 
 
 def check_po_number(sock, uid, client_order_ref, partner_id):
@@ -319,8 +319,8 @@ def check_po_number(sock, uid, client_order_ref, partner_id):
         # if sale_ids from the above search, then po number is duplicated, warn
         # user, and do not input the sale order
         if sale_ids:
-            print "This is a duplicate PO and will not be pushed into the" \
-                  " system."
+            print("""This is a duplicate PO and will not be pushed
+            into the system.""")
             result = True
 
     return result
@@ -395,7 +395,7 @@ def create_sale_order(
         'edi_est_so_ship_date': datetime.now().strftime('%Y-%m-%d')
     }
 
-    print "Attempting to create %s" % sale_hash
+    print("Attempting to create %s" % sale_hash)
     sale_id = sock.execute(DBNAME, uid, PWD, 'sale.order', 'create', sale_hash)
     return sale_id, src_location_id, pricelist_id
 
@@ -408,7 +408,7 @@ def search_product(sock, uid, product_upc, product_sku):
         product_id = ids[0]
     except Exception:
         product_id = 'no_exist'
-        print 'product does not exist'
+        print('product does not exist')
 
     return product_id
 
@@ -517,12 +517,12 @@ def create_so_lines(
                 sale_line_ids.append(line_id)
 
             except Exception:
-                print "Could not add the order line", sys.exc_info()[0]
+                print("Could not add the order line", sys.exc_info()[0])
 
         else:
 
-            print "INFO: ***** FAILURE TO FIND PRODUCT WITH UPC CODE: " + \
-                str(product_code)
+            print("""INFO: ***** FAILURE TO FIND PRODUCT WITH UPC CODE:
+            """ + str(product_code))
             products_not_found = products_not_found + '\n Line not input: ' + \
                 qty + ' ' + uom + ' of ' + product_code
 
@@ -539,7 +539,7 @@ def process_record(sock, uid, record, partner_rec, config_rec):
 
     # We're using fullfillment_channel to store Sale Automatic Workflow ID per
     # customer, this is attached to the order
-    print "Automatic workflow is: " + str(config_rec['auto_workflow'])
+    print("Automatic workflow is: " + str(config_rec['auto_workflow']))
     automatic_workflow_id = config_rec['auto_workflow']
     # use the 850 PO info to create a sales order
     sale_id, src_location_id, pricelist_id = \
@@ -611,7 +611,7 @@ def main(sock, uid, order_dict, in_path):
         # process record and input sale order with multiple order lines in
         # OpenERP
 
-        print "Processing PO#: " + str(order_dict['po_num'])
+        print("Processing PO#: " + str(order_dict['po_num']))
         if not check_po_number(
                 sock,
                 uid,
@@ -623,20 +623,20 @@ def main(sock, uid, order_dict, in_path):
                     sock, uid, order_dict, partner_rec, config)
 
             except Exception:
-                print "Cannot process order.  Sale order or order lines not" \
-                      " created. ", sys.exc_info()
+                print("""Cannot process order.Sale order or order
+                lines not created. """, sys.exc_info())
 
-            print "Sale added id: " + str(sale_id)
+            print("Sale added id: " + str(sale_id))
     else:
-        print 'There is no trading partner that matches the partner header' \
-              ' string in the 850 file.'
-        print 'Please verify that there are trading partners defined and that' \
-              ' the header strings are correctly defined on them.'
+        print('''There is no trading partner that matches the partner header
+        string in the 850 file.''')
+        print('''Please verify that there are trading partners defined and
+        that the header strings are correctly defined on them.''')
 
     return sale_id
 
 
 if __name__ == '__main__':
-    print 'Process: EDI In - Starting'
+    print('Process: EDI In - Starting')
     main()
-    print 'Process: EDI In - Ending'
+    print('Process: EDI In - Ending')

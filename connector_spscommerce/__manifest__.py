@@ -5,20 +5,23 @@
 {
     'name': 'EDI Integration with SPS Commerce',
     'summary': 'Integrate with retail stores using SPS Commerce',
-    'version': '9.0.1.0.0',
+    'version': '11.0.1.0.0',
     'license': 'AGPL-3',
     'author': 'Open Source Integrators, Odoo Community Association (OCA)',
+    'website': 'https://github.com/OCA/connector-spscommerce',
     'depends': [
-        'procurement',
         'account',
         'delivery',
         'sale_stock',
+        'purchase',
         'sale_automatic_workflow',
     ],
-    'data':[
+    'data': [
         'views/sale_view.xml',
         'views/stock_view.xml',
         'views/company_config_settings_view.xml',
+        'views/res_company.xml',
+        'views/res_partner.xml',
         'views/account_invoice_view.xml',
     ],
     'installable': True,

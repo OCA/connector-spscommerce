@@ -24,7 +24,7 @@ log_path = '/var/log/_edi/Logs'
 
 count = 0
 
-print "Current date & time " + time.strftime("%c")
+print("Current date & time " + time.strftime("%c"))
 
 
 def ftp_connect(HOST, UNAME, PW):
@@ -83,10 +83,10 @@ def process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR):
 
             try:
                 ftp.rename(SOURCE_DIR + filename, REMOTE_ARCHIVE + filename)
-                logging.info('Successfully transfered %s' % 
+                logging.info('Successfully transfered %s' %
                              filename + 'from remote host')
-                print 'Successful Transfer of: ' + filename + \
-                      ' from remote host'
+                print('''Successful Transfer of:
+                ''' + filename + ' from remote host')
             except Exception:
                 logging.error(
                     'Failed to archive %s on remote server' % filename)
@@ -99,9 +99,9 @@ def process_files(ftp, SOURCE_DIR, LOCAL_SOURCE_DIR, DEST_DIR, LOCAL_DEST_DIR):
 
             try:
                 shutil.move(LOCAL_SOURCE_DIR + filename, ARCHIVE)
-                logging.info('Successfully transfered %s' % 
+                logging.info('Successfully transfered %s' %
                              filename + 'to remote host')
-                print 'Successful Transfer of: ' + filename + ' to remote host'
+                print('Successful Transfer of:' + filename + ' to remote host')
             except Exception:
                 logging.error(
                     'Failed to archive %s on local server' % filename)
@@ -130,7 +130,7 @@ def transfer_files(ftp, files, SOURCE_DIR, DEST_DIR, transfer_type):
         except Exception:
 
             res = False
-            logging.error('Error transferring ' + filename + 
+            logging.error('Error transferring ' + filename +
                           ' using transfer type: ' + transfer_type)
 
     return res
@@ -143,7 +143,7 @@ def main():
 
 
 if __name__ == '__main__':
-    print 'Starting'
+    print('Starting')
     main()
-    print 'Sleeping'
+    print('Sleeping')
     time.sleep(5)
