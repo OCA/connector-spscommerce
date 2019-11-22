@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- EDI CONFIG ON Partner -->
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">partner.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="999"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="ship_to_code" />
+            </field>
+            <field name="comment" position="before">
+                <group invisible="1" >
+                    <separator string="EDI Configuration"/>
+                    <field name="trading_partner_res" nolabel="1">
+                        <tree string="EDI Configuration" editable="bottom">
+                            <field name="trading_partner_id"/>
+                            <field name="partner_header_string"/>
+                            <field name="vendor_header_string"/>
+                            <field name="billto_header_string"/>
+                            <field name="in_path"/>
+                            <field name="out_path"/>
+                            <field name="archive_path"/>
+                            <field name="log_path"/>
+                            <field name="ack_855"/>
+                            <field name="auto_workflow"/>
+                            <field name="route_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </field>
+        </field>
+    </record>
+
+</odoo>

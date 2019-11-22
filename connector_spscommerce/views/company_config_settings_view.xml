@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Trading Partner EDI Config TREE -->  
+    <record model="ir.ui.view" id="qb_edi_tree_view">
+        <field name="name">qb.edi.tree.view</field>
+        <field name="model">edi.config</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Trading Partners">
+                <field name="trading_partner_id"/>
+                <field name="partner_header_string"/>
+                <field name="vendor_header_string"/>
+                <field name="billto_header_string"/>
+                <field name="in_path"/>
+                <field name="out_path"/>
+                <field name="archive_path"/>
+                <field name="log_path"/>
+                <field name="ack_855"/>
+                <field name="auto_workflow"/>
+                <field name="route_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Trading Partner EDI Config Form -->
+    <record model="ir.ui.view" id="qb_edi_form_view">
+        <field name="name">qb.edi.form</field>
+        <field name="model">edi.config</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Trading Partners">
+                <group>
+                    <field name="trading_partner_id"/>
+                    <field name="partner_header_string"/>
+                    <field name="vendor_header_string"/>
+                    <field name="billto_header_string"/>
+                    <field name="in_path"/>
+                    <field name="out_path"/>
+                    <field name="archive_path"/>
+                    <field name="log_path"/>
+                    <field name="ack_855"/>
+                    <field name="auto_workflow"/>
+                    <field name="route_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Link the form and tree to an action -->
+    <record id="action_edi_form" model="ir.actions.act_window" >
+        <field name="name">EDI Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">edi.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- action for form -->
+    <record id="action_edi_form_view2" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="qb_edi_form_view"/>
+        <field name="act_window_id" ref="action_edi_form"/>
+    </record>
+
+    <!-- action for tree -->
+    <record id="action_edi_tree_view1" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="qb_edi_tree_view"/>
+        <field name="act_window_id" ref="action_edi_form"/>
+    </record>
+
+</odoo>
