@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Trading Partner EDI Config TREE -->
+        <record model="ir.ui.view" id="qb_edi_tree_view">
+            <field name="name">qb.edi.tree.view</field>
+            <field name="model">edi.config</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Trading Partners">
+                    <field name="trading_partner_id"/>
+                    <field name="partner_header_string"/>
+                    <field name="vendor_header_string"/>
+                    <field name="billto_header_string"/>
+                    <field name="in_path"/>
+                    <field name="out_path"/>
+                    <field name="archive_path"/>
+                    <field name="log_path"/>
+                    <field name="ack_855"/>
+                    <field name="auto_workflow"/>
+                    <field name="route_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Trading Partner EDI Config Form -->
+        <record model="ir.ui.view" id="qb_edi_form_view">
+            <field name="name">qb.edi.form</field>
+            <field name="model">edi.config</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Trading Partners">
+                    <group>
+                        <field name="trading_partner_id"/>
+                        <field name="partner_header_string"/>
+                        <field name="vendor_header_string"/>
+                        <field name="billto_header_string"/>
+                        <field name="in_path"/>
+                        <field name="out_path"/>
+                        <field name="archive_path"/>
+                        <field name="log_path"/>
+                        <field name="ack_855"/>
+                        <field name="auto_workflow"/>
+                        <field name="route_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Link the form and tree to an action -->
+        <record id="action_edi_form" model="ir.actions.act_window">
+            <field name="name">EDI Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">edi.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- action for form -->
+        <record id="action_edi_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="qb_edi_form_view"/>
+            <field name="act_window_id" ref="action_edi_form"/>
+        </record>
+
+        <!-- action for tree -->
+        <record id="action_edi_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="qb_edi_tree_view"/>
+            <field name="act_window_id" ref="action_edi_form"/>
+        </record>
+
+
+        <!-- EDI CONFIG ON COMPANY -->
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">company.inherit.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='configuration']" position="inside">
+                    <field name="trading_partner_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- EDI CONFIG ON Partner -->
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">partner.inherit.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="999"/>
+            <field name="arch" type="xml">
+                <field name="email" position="after">
+                    <field name="ship_to_code"/>
+                </field>
+                <field name="comment" position="before">
+                    <group invisible="1">
+                        <separator string="EDI Configuration"/>
+                        <field name="trading_partner_res" nolabel="1">
+                            <tree string="EDI Configuration" editable="bottom">
+                                <field name="trading_partner_id"/>
+                                <field name="partner_header_string"/>
+                                <field name="vendor_header_string"/>
+                                <field name="billto_header_string"/>
+                                <field name="in_path"/>
+                                <field name="out_path"/>
+                                <field name="archive_path"/>
+                                <field name="log_path"/>
+                                <field name="ack_855"/>
+                                <field name="auto_workflow"/>
+                                <field name="route_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
